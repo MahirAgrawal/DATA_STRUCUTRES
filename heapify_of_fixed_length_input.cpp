@@ -49,11 +49,11 @@ void push(int d){
     }
   }
 int pop(){
-  int ans = -232e5;
+  int ans;
   if(current_index == 0){
     current_index = max_index - 1;    
     cout<<"OUT_OF_BOUND_EXCEPTION!"<<endl;
-    return ans;
+    return INT_MIN;
     }
   ans = *array;
   swap_by_reference(*array,array[current_index-1]);
