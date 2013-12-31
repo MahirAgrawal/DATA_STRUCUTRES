@@ -4,6 +4,9 @@
 #define cin std::cin
 #define endl std::endl
 #define MAX_INDEX 50
+
+
+//PRIORITY IN BASED ON: LOWER THE NUMBER , HIGHER THE PRIORITY
 template<class X>
 class p_queue;
 template<class X>
@@ -71,13 +74,13 @@ void enqueue(X d,int p)
     }
   else
     {
-      if(tail -> priority <= p)
+      if(tail -> priority <= p)//EDGE CASES
       {  
       tail -> next = ptr;
       ptr -> next = NULL;
       tail = ptr;
       }
-    else if(head -> priority > p)
+    else if(head -> priority > p)//EDGE CASES
       {  
       ptr -> next = head;
       head = ptr;
