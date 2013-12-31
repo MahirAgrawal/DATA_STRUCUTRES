@@ -144,9 +144,50 @@ class RedBlack{
       }
     this -> root -> color = 0;//RECOLORING BLACK TO MAKE SURE THAT ROOT REMAINS BLACK
     }
-  void blackHeight(FILE *fp,std::ofstream& file){
+  void remove(int data){
+    auto traversalptr = this -> root;
+    while(traversalptr){
+      if(traversalptr -> data == data){
+        if(traversalptr -> left == NULL && traversalptr -> right == NULL && traversalptr -> color){//NODE IS RED AND WITH NO CHILD
+	  if(PARENT(traversalptr) -> data > data)//SETTING PARENT'S LEFT POINTER AFTER DELETION TO NULL
+	    PARENT(traversalptr) -> left = NULL;
+	  else
+	    PARENT(traversalptr) -> right = NULL;//SETTING PARENT'S RIGHT POINTER TO NULL
+	  delete traversalptr;
+	  traversalptr = NULL;
+	  }
+	else if(!(traversalptr->color) && traversalptr->left && traversalptr->left->color && !(traversalptr->left->left) && !(traversalptr->left->right)){
+	    traversalptr -> data = traversalptr -> left -> data;
+	    delete traversalptr -> left;
+	    traversalptr -> left = NULL;
+	    traversalptr = NULL;
+	    }
+	else if(!(traversalptr->color) && traversalptr->right && traversalptr->right->color && !(traversalptr->right->left) && !(traversalptr->right->right)){
+	    traversalptr -> data = traversalptr -> right -> data;
+	    delete traversalptr -> right;
+            traversalptr -> right = NULL;
+	    traversalptr = NULL;
+	    }
+	else if(!(traversalptr->color) && traversalptr->right && traversalptr->ptr){
+	  
+	  }
+        }
+      else if(data < traversalptr -> data)
+        traversalptr = traversalptr -> left;
+      else
+	traversalptr = traversalptr -> right;
+      }
+    }
+  void blackHeight(){
+    //C style
+    FILE *fp = fopen("PathC.txt","w");
+    //C++ style
+    std::ofstream file;
+    file.open("PathC++.txt",std::ios::out);
     vector<Node*> v;
     countPath(this -> root,v,fp,file);
+    file.close();
+    fclose(fp);
     }
   void countPath(Node *ptr,vector<Node*>& v,FILE *fp,std::ofstream& file){
     if(ptr == NULL){
@@ -177,7 +218,7 @@ class RedBlack{
   };
 int main(){
 RedBlack tree;
-int n = 1000;
+int n = 100;
 for(int i = 1;i <= n;i++){
   tree.insert(i);
   //cout<<endl;
@@ -190,13 +231,6 @@ cout<<endl;
 //AND IT IS PRINTED BECAUSE WE CAN SEE AND PROVE THAT OUR ABOVE IMPLEMENTATION WORKS BECAUSE IT PRINTS 'COLOR' OF NODES IN A PATH     AND AS IT PRINTS ALL PATHS SO 'COUNT OF BLACK COLOR' SHOULD BE SAME FOR ALL PATHS
 //BY WATCHING ALL PATHS FROM ROOT TO NULL ,BLACK COLOR COUNT IS SAME FOR ALL PATHS WE CAN SATISFY RedBlack PROPERTY!!
 
-//C style
-FILE *fp = fopen("PathC.txt","a");
-//C++ style
-std::ofstream file;
-file.open("PathC++.txt",std::ios::app);
-tree.blackHeight(fp,file);//giving file to write paths in it
-file.close();
-fclose(fp);
+tree.blackHeight();
 return 0;  
 }
