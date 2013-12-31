@@ -3,43 +3,61 @@
 #include<conio.h>
 #include<fstream>
 #include<stdio.h>
+#include<string>
+#define string std::string
 #define cout std::cout
 #define cin std::cin
 #define endl std::endl
 #define vector std::vector
 #define GRANDPARENT(x) (x->parent->parent)
 #define PARENT(x) (x->parent)
+ //WHY NOT DONE COUNT FOR STROING DUPLICATE KEYS?
+ //BECAUSE RED-BLACK TREES AND 2,3,4 TREES ONLY STORE KEYS AND ADDRESS AND ALL KEYS ARE UNIQUE SO DUPLICATE KEYS ARE NOT STORED
+ 
  //1 for RED and 0 for BLACK
+ //STORES INTEGER KEY AND TEMPLATE SPECIFIED DATATYPE'S DATA WITH IT!!
+template<class X>
+class RedBlack;
+template<class X>
 class Node{
-  Node *parent;//STORES POINTER TO PARENT ALSO
-  Node *left;
-  int data;
-  Node *right;
+  Node<X> *parent;//STORES POINTER TO PARENT ALSO
+  Node<X> *left;
+  int key;
+  X data;
+  Node<X> *right;
   bool color;
-  Node(int data,Node *parent = NULL){
+  Node(int key,X data,Node<X> *parent = NULL){
     this -> parent = parent;
     this -> left = NULL;
+    this -> key = key;
     this -> data = data;
     this -> right = NULL;
     this -> color = 1;
     }
-  friend class RedBlack;
+  ~Node(){
+    this -> parent = NULL;
+    this -> left = NULL;
+    this -> right = NULL;
+    this -> color = 0;
+    }
+  friend class RedBlack<X>;
   };
+template<class X>
 class RedBlack{
-  Node *root = NULL;
+  Node<X> *root = NULL;
   public:
   RedBlack(){
     root = NULL;
     }
   private:
-  Node* recolor(Node *child){ 
+  Node<X>* recolor(Node<X> *child){ 
     GRANDPARENT(child) -> left -> color = 0;
     GRANDPARENT(child) -> right -> color = 0;
     GRANDPARENT(child) -> color = 1;
     return (GRANDPARENT(child));
     }
    
-  Node* leftRotation(Node *ptr){
+  Node<X>* leftRotation(Node<X> *ptr){
     auto to_preserve = GRANDPARENT(ptr);
     GRANDPARENT(ptr) = ptr;
     if(ptr -> left != NULL)
@@ -48,7 +66,7 @@ class RedBlack{
     ptr -> left = PARENT(ptr);
     PARENT(ptr) = to_preserve;
     if(PARENT(ptr) != NULL){
-      if(ptr -> data < PARENT(ptr) -> data)//SETTING PTR AS GRANDPARENT CHILD HERE ONLY AS RECURSIVE SOLUTION LIKE IN AVL WON'T WORK
+      if(ptr -> key < PARENT(ptr) -> key)//SETTING PTR AS GRANDPARENT CHILD HERE ONLY AS RECURSIVE SOLUTION LIKE IN AVL WON'T WORK
         PARENT(ptr) -> left = ptr;
       else
         PARENT(ptr) -> right = ptr;
@@ -58,7 +76,7 @@ class RedBlack{
     return ptr;
     }
 
-  Node* rightRotation(Node *ptr){
+  Node<X>* rightRotation(Node<X> *ptr){
     auto to_preserve = GRANDPARENT(ptr);
     GRANDPARENT(ptr) = ptr;
     if(ptr -> right != NULL)
@@ -67,7 +85,7 @@ class RedBlack{
     ptr -> right = PARENT(ptr);
     PARENT(ptr) = to_preserve;
     if(PARENT(ptr) != NULL){
-      if(ptr -> data < PARENT(ptr) -> data)//SETTING GRANDPARENT'S CHILD HERE AS RECURSIVE SOLUTION LIKE IN AVL WON'T WORK
+      if(ptr -> key < PARENT(ptr) -> key)//SETTING GRANDPARENT'S CHILD HERE AS RECURSIVE SOLUTION LIKE IN AVL WON'T WORK
         PARENT(ptr) -> left = ptr;
       else
         PARENT(ptr) -> right = ptr;
@@ -77,33 +95,38 @@ class RedBlack{
     return ptr;
     }
   public:
-  void insert(int data){
+  void insert(int key,X data){
     if(root == NULL){
-      root = new Node(data);
+      root = new Node<X>(key,data);
       return;
       }
     auto traversalptr = this -> root;
     auto parentptr = PARENT(traversalptr);
     while(traversalptr){//GET TO THE APPROPRIATE LEAF NODE TO INSERT DATA
-      if(data < traversalptr -> data){
+      if(key < traversalptr -> key){
 	//cout<<"TO THE LEFT OF "<<traversalptr->data<<endl;
         parentptr = traversalptr;
         traversalptr = traversalptr -> left;
         }
-      else{
+      else if(key > traversalptr -> key){
 	//cout<<"TO THE RIGHT OF "<<traversalptr->data<<endl;
 	parentptr = traversalptr;
         traversalptr = traversalptr -> right;
         }
+      else{//KEY DATA IS ALREADY PRESENT SO WON'T ACCEPT DUPLICATE
+         cout<<"KEY "<<key<<" ALREADY EXISTS!!"<<endl;
+	 cout<<"TRY UPDATE INSTEAD!!"<<endl;
+	 return;
+        }
       }
     //traversalptr is NULL SO WE HAVE GET TO THE CORRECT LEAF NODE
     //NOW ONLY DECISION IS WHETHER THE DATA WILL BE LEFT OR RIGHT TO LEAF NODE
-    if(data < parentptr -> data){
-      parentptr -> left = new Node(data,parentptr);
+    if(key < parentptr -> key){
+      parentptr -> left = new Node<X>(key,data,parentptr);
       traversalptr = parentptr -> left;
       }
     else{
-      parentptr -> right = new Node(data,parentptr);
+      parentptr -> right = new Node<X>(key,data,parentptr);
       traversalptr = parentptr -> right;
       }
     while(PARENT(traversalptr) != NULL && PARENT(traversalptr) != root && traversalptr->color && PARENT(traversalptr) -> color){
@@ -144,7 +167,26 @@ class RedBlack{
       }
     this -> root -> color = 0;//RECOLORING BLACK TO MAKE SURE THAT ROOT REMAINS BLACK
     }
-  Node* getPredecessor(Node *ptr){
+
+  void update(int key,X newData){//key to find NODE and then we change NODE'S key to newData 
+    auto traversalptr = root;
+    bool flag = false;
+    while(traversalptr){
+      if(traversalptr -> key == key){
+        traversalptr -> data = newData;
+	flag = true;
+	break;
+        }
+      else if(traversalptr -> key > key)
+        traversalptr = traversalptr -> left;
+      else
+        traversalptr = traversalptr -> right;
+      }
+    if(!flag)
+      cout<<"KEY "<<key<<" NOT FOUND!!"<<endl;
+    }
+
+  Node<X>* getPredecessor(Node<X> *ptr){
     ptr = ptr -> left;
     if(!ptr)
       return ptr;
@@ -152,7 +194,7 @@ class RedBlack{
       ptr = ptr -> right;
     return ptr;
     }
-  Node* getSuccessor(Node *ptr){
+  Node<X>* getSuccessor(Node<X> *ptr){
     ptr = ptr -> right;
     if(!ptr)
       return ptr;
@@ -160,45 +202,50 @@ class RedBlack{
       ptr = ptr -> left;
     return ptr;
     }
-  void remove(int data){
+  void remove(int key){//GIVEN KEY TO REMOVE SO WE FIND KEY AND REMOVE IT AND ITS DATA
     auto traversalptr = this -> root;
     while(traversalptr){
-      if(traversalptr -> data == data){
+      if(traversalptr -> key == key){
+	//cout<<"FOUND: "<<traversalptr->key<<endl;
         if(!(traversalptr -> left) && !(traversalptr -> right)){//NODE WITH NO CHILD
-	  if(PARENT(traversalptr) -> data > data)//SETTING PARENT'S LEFT POINTER AFTER DELETION TO NULL
+	  if(PARENT(traversalptr) -> key > key)//SETTING PARENT'S LEFT POINTER AFTER DELETION TO NULL
 	    PARENT(traversalptr) -> left = NULL;
 	  else
 	    PARENT(traversalptr) -> right = NULL;//SETTING PARENT'S RIGHT POINTER TO NULL
 	  if(!(traversalptr -> color))
-            rebalance(PARENT(traversalptr),data);
+            rebalance(PARENT(traversalptr),key);
 	  delete traversalptr;
 	  traversalptr = NULL;
 	  }
 	else{
 	  auto replacement = getPredecessor(traversalptr);
-	  int replaceData;
+	  int replaceKey;
+	  X replaceData;
 	  if(replacement){
+	    replaceKey = replacement->key;
 	    replaceData = replacement->data;
-	    remove(replaceData); 
+	    remove(replaceKey); 
 	    }
 	  else{
 	    replacement = getSuccessor(traversalptr);
+	    replaceKey = replacement->key;
 	    replaceData = replacement->data;
-	    remove(replaceData);
+	    remove(replaceKey);
 	    }
+	  traversalptr -> key = replaceKey;
 	  traversalptr -> data = replaceData;
           traversalptr = NULL;
           }
         }
-      else if(data < traversalptr -> data)
+      else if(key < traversalptr -> key)
         traversalptr = traversalptr -> left;
       else
 	traversalptr = traversalptr -> right;
       }
     }
-  void rebalance(Node *ptr,int data){//ARGUMENTS: PARENT AND DELETED DATA TO FIND WHETHER THE NODE WAS ON LEFT OR RIGHT
+  void rebalance(Node<X> *ptr,int key){//ARGUMENTS: PARENT AND DELETED DATA TO FIND WHETHER THE NODE WAS ON LEFT OR RIGHT
     while(ptr){
-      if(ptr -> data > data){//BLACK NODE DELETED FROM LEFT SIDE
+      if(ptr -> key > key){//BLACK NODE DELETED FROM LEFT SIDE
 	if(ptr->color){//PARENT IS RED
 	  if((ptr->right->left && ptr->right->left->color) || (ptr->right->right && ptr->right->right->color)){//MIRROR OF CASE 1.1
 	    if(ptr->right->left && ptr->right->left->color){//RED GRANDCHILD IS AT LEFT OF PTR'S CHILD
@@ -333,17 +380,17 @@ class RedBlack{
     //C++ style
     std::ofstream file;
     file.open("PathC++.txt",std::ios::out);
-    vector<Node*> v;
+    vector<Node<X>*> v;
     countPath(this -> root,v,fp,file);
     file.close();
     fclose(fp);
     }
-  void countPath(Node *ptr,vector<Node*>& v,FILE *fp,std::ofstream& file){
+  void countPath(Node<X> *ptr,vector<Node<X>*>& v,FILE *fp,std::ofstream& file){
     if(ptr == NULL){
       for(int i = 0;i < v.size();i++){
-	cout<<"COLOR: "<<v[i] -> color<<" DATA: "<<v[i]->data<<endl;
-        file<<"COLOR: "<<v[i] -> color<<" DATA: "<<v[i]->data<<endl;
-        fprintf(fp,"COLOR: %d DATA: %d\n",(int)v[i]->color,v[i]->data);
+	cout<<"COLOR: "<<v[i] -> color<<" DATA: "<<v[i]->key<<endl;
+        file<<"COLOR: "<<v[i] -> color<<" DATA: "<<v[i]->key<<endl;
+        fprintf(fp,"COLOR: %d DATA: %d\n",(int)v[i]->color,v[i]->key);
         }
       cout<<endl;
       file<<endl;
@@ -355,7 +402,7 @@ class RedBlack{
     countPath(ptr->right,v,fp,file);
     v.pop_back();
     }
-  void printInorder(Node *ptr){ 
+  void printInorder(Node<X> *ptr){ 
     if(ptr == NULL)
       return;
     printInorder(ptr -> left);
@@ -369,20 +416,30 @@ class RedBlack{
     }
   };
 int main(){
-RedBlack tree;
-int n = 15;
+RedBlack<string> tree;
+int n = 10;
+string name;
+cout<<"ENTER THE NAME FOR KEYS: "<<endl;
 for(int i = 1;i <= n;i++){
-  tree.insert(i);
+  cout<<"ENTER THE NAME FOR KEY "<<i<<":";
+  std::getline(cin,name);
+  tree.insert(i,name);
   //cout<<endl;
   //getch();
   }
 tree.blackHeight();
 tree.display();
+cout<<"1ST DISPLAY"<<endl;
 tree.remove(8);
+tree.remove(5);
+cout<<"AFTER REMOVING.."<<endl;
 tree.display();
 //BELOW CODE PRINT ALL PATHS FROM 'ROOT TO NULL' IN FILE NAMED  PathC and PathC++ IN SAME FOLDER AS THIS CPP FILE IS IN
 //AND IT IS PRINTED BECAUSE WE CAN SEE AND PROVE THAT OUR ABOVE IMPLEMENTATION WORKS BECAUSE IT PRINTS 'COLOR' OF NODES IN A PATH     AND AS IT PRINTS ALL PATHS SO 'COUNT OF BLACK COLOR' SHOULD BE SAME FOR ALL PATHS
 //BY WATCHING ALL PATHS FROM ROOT TO NULL ,BLACK COLOR COUNT IS SAME FOR ALL PATHS WE CAN SATISFY RedBlack PROPERTY!!
+tree.update(2,"F.A.L.T.U");
+tree.update(11,"JK");
+tree.display();
 tree.blackHeight();
 return 0;  
 }
