@@ -176,16 +176,18 @@ class RedBlack{
 	  }
 	else{
 	  auto replacement = getPredecessor(traversalptr);
+	  int replaceData;
 	  if(replacement){
-	    auto replaceData = replacement->data;
+	    replaceData = replacement->data;
 	    remove(replaceData); 
 	    }
 	  else{
 	    replacement = getSuccessor(traversalptr);
-	    auto replaceData = replacement->data;
+	    replaceData = replacement->data;
 	    remove(replaceData);
 	    }
 	  traversalptr -> data = replaceData;
+          traversalptr = NULL;
           }
         }
       else if(data < traversalptr -> data)
@@ -197,8 +199,70 @@ class RedBlack{
   void rebalance(Node *ptr,int data){//ARGUMENTS: PARENT AND DELETED DATA TO FIND WHETHER THE NODE WAS ON LEFT OR RIGHT
     while(ptr){
       if(ptr -> data > data){//BLACK NODE DELETED FROM LEFT SIDE
-	//WRITE HERE
-	}
+	if(ptr->color){//PARENT IS RED
+	  if((ptr->right->left && ptr->right->left->color) || (ptr->right->right && ptr->right->right->color)){//MIRROR OF CASE 1.1
+	    if(ptr->right->left && ptr->right->left->color){//RED GRANDCHILD IS AT LEFT OF PTR'S CHILD
+	      ptr = leftRotation(rightRotation(ptr->right->left));
+	      ptr -> left -> color = 0;
+	      ptr = NULL;
+	      }
+	    else{//RED GRANDCHILD IS AT RIGHT OF PTR'S CHILD
+	      ptr = leftRotation(ptr->right);
+	      ptr -> color = 1;
+	      ptr -> left -> color = 0;
+	      ptr -> right -> color = 0;
+	      ptr = NULL;
+	      }
+	    }
+	  else{//MIRROR CASE OF 1.2 PTR HAS NO RED GRANDCHILD
+	    ptr -> color =  0;
+	    ptr -> right -> color = 1;
+	    ptr = NULL;
+	    }
+	  }
+	else{//MIRROR TO CASE 2 PARENT GIVEN IS BLACK
+	  if(ptr -> right -> color){//PTR HAS RED RIGHT CHILD
+	    if((ptr->right->left->right && ptr->right->left->right->color)||(ptr->right->left->left && ptr->right->left->left->color)){//GRANDCHILD'S ONE OR BOTH CHILD ARE RED
+	      if(ptr -> right -> left -> right && ptr -> right -> left -> right -> color){//MIRROR TO CASE 2.1.1 GRANDCHILD'S RED   CHILD IS ON RIGHT
+	        ptr -> right -> left -> right -> color = 0;
+		ptr = leftRotation(rightRotation(ptr->right->left));
+		ptr = NULL;
+	        }
+	      else{//GRANDCHILD'S RED CHILD IS ON LEFT
+	        ptr = rightRotation(ptr->right->left->left);
+		ptr -> color = !(ptr -> color);
+		ptr = leftRotation(rightRotation(ptr));
+		ptr = NULL;
+	        }
+	      }
+	    else{//MIRROR TO CASE 2.1.2 GRANDCHILD'S NONE OF THE CHILD IS RED
+              ptr = leftRotation(ptr->right);
+              ptr -> color = !(ptr -> color);
+	      ptr -> left -> right -> color = 1;
+	      ptr = NULL;
+	      }
+	    }
+	  else{//MIRROR TO CASE 2.2.1 PTR HAS BLACK RIGHT CHILD
+	    if((ptr->right->left && ptr->right->left->color) || (ptr->right->right && ptr->right->right->color)){
+	      if(ptr->right->left && ptr->right->left->color){
+	         ptr = leftRotation(rightRotation(ptr->right->left));
+		 ptr -> color = 0;
+		 ptr = NULL;
+	         }
+	      else{
+	        ptr = leftRotation(ptr->right->right); 
+		ptr -> color = !(ptr -> color);
+		ptr = leftRotation(rightRotation(ptr->left));
+	        ptr = NULL;
+	        }
+	      }
+	    else{//MIRROR TO CASE 2.2.2 PTR'S NONE OF THE GRANDCHILD IS RED
+	      ptr -> right -> color = 1;
+	      ptr = ptr -> parent;
+	      }
+	    }
+	  }
+        }
       else{//NODE DELETED FROM RIGHT
         if(ptr->color){//CASE 1: PARENT IS RED SO IT MUST HAVE LEFT BLACK CHILD 
 	  if((ptr->left->left && ptr->left->left->color) || (ptr->left->right && ptr->left->right->color)){//CASE 1.1: IT HAS ONE OR TWO GRAND CHILD ONE OR BOTH OF THEM IS RED
@@ -277,9 +341,11 @@ class RedBlack{
   void countPath(Node *ptr,vector<Node*>& v,FILE *fp,std::ofstream& file){
     if(ptr == NULL){
       for(int i = 0;i < v.size();i++){
+	cout<<"COLOR: "<<v[i] -> color<<" DATA: "<<v[i]->data<<endl;
         file<<"COLOR: "<<v[i] -> color<<" DATA: "<<v[i]->data<<endl;
         fprintf(fp,"COLOR: %d DATA: %d\n",(int)v[i]->color,v[i]->data);
         }
+      cout<<endl;
       file<<endl;
       fprintf(fp,"\n");
       return;
@@ -299,23 +365,24 @@ class RedBlack{
   public:
   void display(){
     printInorder(this -> root);
+    cout<<endl;
     }
   };
 int main(){
 RedBlack tree;
-int n = 100;
+int n = 15;
 for(int i = 1;i <= n;i++){
   tree.insert(i);
   //cout<<endl;
   //getch();
   }
+tree.blackHeight();
 tree.display();
-cout<<endl;
-
+tree.remove(8);
+tree.display();
 //BELOW CODE PRINT ALL PATHS FROM 'ROOT TO NULL' IN FILE NAMED  PathC and PathC++ IN SAME FOLDER AS THIS CPP FILE IS IN
 //AND IT IS PRINTED BECAUSE WE CAN SEE AND PROVE THAT OUR ABOVE IMPLEMENTATION WORKS BECAUSE IT PRINTS 'COLOR' OF NODES IN A PATH     AND AS IT PRINTS ALL PATHS SO 'COUNT OF BLACK COLOR' SHOULD BE SAME FOR ALL PATHS
 //BY WATCHING ALL PATHS FROM ROOT TO NULL ,BLACK COLOR COUNT IS SAME FOR ALL PATHS WE CAN SATISFY RedBlack PROPERTY!!
-
 tree.blackHeight();
 return 0;  
 }
