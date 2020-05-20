@@ -7,3 +7,4 @@ hello_world.cpp
 *.cpp~
 .gitignore~
 *.vim
+*.exe
