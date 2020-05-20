@@ -1,4 +1,6 @@
 #include<iostream>
+#include<string.h>
+#include<stdlib.h>
 #define cout std::cout
 #define cin std::cin
 #define endl std::endl
@@ -23,19 +25,24 @@ else if(alpha == 'I' || alpha == 'i')
 	return 1;
 else{
 cout<<"SOMETHING WRONG HAS HAPPENED WITH YOUR INPUT!!!<<endl";
-return;
+exit(1);
 }
 }
 void set_roman_num(char *s)
 {
 int *temp_num = NULL;
 int size = strlen(s);
+//cout<<"SIZE: "<<size<<endl;
 temp_num = new int[size];
 temp_num[0] = value(s[0]);
 for(int i = 0;i < (size-1);i++)
 {
 if(value(s[i]) < value(s[i+1]))
-	temp_num[i+1] = (-1)*value(s[i+1]);
+	{
+	cout<<"INSIDE IF..."<<endl;
+	temp_num[i] = (-1)*value(s[i]);
+	temp_num[i+1] = value(s[i+1]);	
+	}
 else
 	temp_num[i+1] = value(s[i+1]);
 }
@@ -49,21 +56,20 @@ roman()
 roman_num = 0;
 roman_str = NULL;
 }
-roman(char *temp_str)
+roman(const char *temp_str)
 {
-roman_str = temp_str;
+roman_str = (char *)temp_str;
 set_roman_num(roman_str);
 }
 void add()
 {
 char name[10];
 cout<<"ENTER THE ROMAN NUMBER: ";
-cin<<name;
+cin>>name;
 int size = strlen(name);
 roman_str = new char[size+1];
 strcpy(roman_str,name);
 set_roman_num(roman_str);
-cout<<"YOUR NUMBER HAS BEEN ADDED!!!!"<<endl;
 }
 void display()
 {
@@ -75,4 +81,13 @@ int main()
 {
 roman r("XL");
 r.display();
+roman r2;
+r2.add();
+r2.display();
+r2.add();
+r2.display();
+r2.add();
+r2.display();
+r2.add();
+r2.display();
 }

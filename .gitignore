@@ -6,3 +6,4 @@ hello_world.cpp
 *.swp~
 *.cpp~
 .gitignore~
+*.vim
