@@ -32,14 +32,12 @@ void set_roman_num(char *s)
 {
 int *temp_num = NULL;
 int size = strlen(s);
-//cout<<"SIZE: "<<size<<endl;
 temp_num = new int[size];
 temp_num[0] = value(s[0]);
 for(int i = 0;i < (size-1);i++)
 {
 if(value(s[i]) < value(s[i+1]))
 	{
-	cout<<"INSIDE IF..."<<endl;
 	temp_num[i] = (-1)*value(s[i]);
 	temp_num[i+1] = value(s[i+1]);	
 	}
@@ -81,13 +79,13 @@ int main()
 {
 roman r("XL");
 r.display();
-roman r2;
+roman r2,r3,r4,r5;
 r2.add();
 r2.display();
-r2.add();
-r2.display();
-r2.add();
-r2.display();
-r2.add();
-r2.display();
+r3.add();
+r3.display();
+r4.add();
+r4.display();
+r5.add();
+r5.display();
 }
