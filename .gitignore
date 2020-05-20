@@ -4,3 +4,5 @@ hello_world.cpp
 *.un~
 *.swp
 *.swp~
+*.cpp~
+.gitignore~
