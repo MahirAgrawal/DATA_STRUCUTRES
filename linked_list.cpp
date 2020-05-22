@@ -59,9 +59,10 @@ head = ptr;
 index++;
 }
 };
+void pop_back()
+{
 
-
-
+}
 int main()
 {
 void display()
