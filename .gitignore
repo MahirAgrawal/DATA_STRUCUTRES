@@ -2,6 +2,7 @@ header.h
 header.cpp
 hello_world.cpp
 *.un~
+*.h~
 *.swp
 *.swp~
 *.cpp~
