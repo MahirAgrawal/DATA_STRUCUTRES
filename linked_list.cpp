@@ -2,6 +2,7 @@
 #include<iostream>
 #include<conio.h>
 #include<cstdlib>
+#include<string.h>
 using namespace std;
 template<class X>
 class node{
@@ -14,15 +15,15 @@ next = NULL;
 }
 ~node()
 {
-cout<<"NODE WAS DESTROYED"<<endl;
+//cout<<"NODE WAS DESTROYED"<<endl;
 next = NULL;
 }
 };
 template<class X>
 class list{
-int index = 0;
+int index;
 node<X> *head;
-bool empty = true;
+bool empty;
 public:
 list()
 {
@@ -35,7 +36,7 @@ bool is_empty()
 {
 return empty;
 }
-void push_back(X value)
+void push_back(X& value)
 {
 if(head == NULL)
 	{
@@ -56,7 +57,7 @@ else
 index++;
 empty = false;
 }
-void push_front(X value)
+void push_front(X& value)
 {
 if(head == NULL)
 	{
@@ -126,7 +127,7 @@ else{
     index--;
     }
 }
-void push(int i,X value)//pushes the given value at a given index and if provided index larger than the actual index of list which is because of its currents, then the given value will be added to end by default
+void push(int i,X& value)//pushes the given value at a given index and if provided index larger than the actual index of list which is because of its currents, then the given value will be added to end by default
 //for eg. index of list is 4 due to 4 nodes but you give 10th index to be filled then it will by default add given value to end that is at 5th index.
 {
 if(head == NULL)
@@ -225,12 +226,19 @@ node<X> *ptr = head;
 cout<<"ELEMENTS: ";
 while(ptr != NULL)
 	{
-	cout<<(ptr -> data)<<" ";
+	std::cout<<(ptr -> data);
+	cout<<"\n";
 	ptr = ptr -> next;
 	}
 cout<<'\n';
 }
 };
+//linked list is class but 
+//before using it for storing your user defined class,do the following:
+//create '<' and '>' overloaded functions in your class for sort function 
+//create '=' overloaded function in your class for copying values from one variable to another
+//create friend function of ostream in which '<<' is overloaded to display data in object
+//BELOW FULL EXAMPLE IS GIVEN OF DOG CLASS AND '<<' OVERLOADED  
 class dog{
 char name[20];
 float price;
@@ -257,6 +265,12 @@ if(price > d.price)
 else 
 	return 0;
 }
+void operator =(dog& d)
+{
+//cout<<"= was CALLED!!!!\n";
+strcpy(name,d.name);
+price = d.price;
+}
 ~dog()
 {
 name[0] = 'n';
@@ -265,71 +279,33 @@ name[2] = 'l';
 name[3] = 'l';
 name[4] = '\0';
 price = 0;
-cout<<"dog was destroyed"<<endl;
+//cout<<"dog was destroyed"<<endl;
 }
+friend ostream& operator <<(ostream &out,const dog& d);
 };
+ostream& operator <<(ostream &out,const dog& d)
+{
+cout<<"NAME OF DOG: "<<d.name<<endl;
+cout<<"PRICE OF DOG: "<<d.price<<endl;
+}
+
 int main()
 {
-/*list<dog> l;
+list<dog> l;
 for(int i = 0;i < 4;i++)
 {
 dog *d = new dog;
-dog -> add();
-l.push_back();
-}*/
-list<char> l;
-l.push_back('m');
-l.display();
-l.pop_back();
-l.display();
-cout<<"SIZE:"<<l.size();
-l.push_back('i');
-l.display();
-l.push_front('b');
-l.display();
-l.pop_front();
-l.display();
-l.push_back('i');
-l.display();
-l.push_front('b');
-l.display();
-l.pop_back();
-l.display();
-list<char> l2;
-cout<<"LIST 2\n";
-l2.push_back('i');
-l2.display();
-l2.push_front('u');
-l2.display();
-l2.push_front('t');
-l2.display();
-l2.push_front('r');
-l2.display();
-l2.sort();
-cout<<"sorted:"<<endl;
-l2.display();
-cout<<l2.at(4)<<endl;
-cout<<l2.at(0)<<endl;
-cout<<l2.at(1)<<endl;
-l + l2;
-l.display();
-cout<<"SIZE:"<<l.size();
-cout<<"sorted:"<<endl;
+d -> add();
+l.push_back(*d);
+delete d;
+}
 l.sort();
 l.display();
-l.pop(3);
+dog *d = new dog;
+d -> add();
+l.push(3,*d);
 l.display();
-l.push(0,'x');
-l.display();
-l.push(3,'x');
-l.display();
-l.push(0,'x');
-l.display();
-l.pop(9);
-l.display();
-cout<<"SIZE:"<<l.size();
+delete d;
 l.clear();
-l.display();
-cout<<"SIZE:"<<l.size();
 return 0;
 }
