@@ -15,18 +15,20 @@ next = NULL;
 ~node()
 {
 next = NULL;
-cout<<"DATA WAS DELETED!!!";
+cout<<"DATA WAS DELETED!!!\n";
 }
 };
 template<class X>
 class list{
 int index = 0;
 node<X> *head;
+public:
 list()
 {
 index = 0;
 head = NULL;
 }
+public:
 void push_back(X value)
 {
 if(head == NULL)
@@ -68,11 +70,11 @@ void pop_back()
 if(head == NULL)
 	return;
 node<X> *ptr = head;
-for(int i = 0;i < (index-1);i++)
+for(int i = 0;i < (index-2);i++)
 	ptr = ptr -> next;
 node<X> *temp = ptr -> next;
 ptr -> next = NULL;
-delete []temp;
+delete temp;
 index--;
 }
 void pop_front()
@@ -81,12 +83,12 @@ if(head == NULL)
 	return;
 node<X>* ptr = head;
 head = head -> next;
-delete []ptr;
+delete ptr;
 index--;
 }
 int size()
 {
-return index+1;
+return index;
 }
 void display()
 {
@@ -99,8 +101,9 @@ while(ptr != NULL)
 	cout<<(ptr -> data)<<" ";
 	ptr = ptr -> next;
 	}
+cout<<'\n';
 }
-
+};
 int main()
 {
 list<char> l;
@@ -109,6 +112,14 @@ l.display();
 l.push_back('i');
 l.display();
 l.push_front('b');
+l.display();
+l.pop_front();
+l.display();
+l.push_back('i');
+l.display();
+l.push_front('b');
+l.display();
+l.pop_back();
 l.display();
 cout<<"SIZE:"<<l.size();
 return 0;
