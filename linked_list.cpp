@@ -218,12 +218,50 @@ if(count == 0)
 	break;
 }
 }}
+void swap(int index1 = -1,int index2 = -1)
+{
+if(index1 >= index || index1 < 0 || index2 >= index || index2 < 0)
+	return;
+else{
+node<X>* ptr1 = head;
+node<X>* ptr2 = head;
+for(int  i = 0;i < index1;i++)
+	ptr1 = ptr1 -> next;
+for(int  i = 0;i < index2;i++)
+	ptr2 = ptr2 -> next;
+X temp_data = ptr1 -> data;
+ptr1 -> data = ptr2 -> data;
+ptr2 -> data = temp_data;
+}
+}
+void reverse(int index1 = 0,int index2 = - 1)
+{
+if(index1 >= index || index1 < 0 || index2 >= index || index2 < 0)
+	return;
+if(index2 - index1 < 0)
+	{
+	int temp = index1;
+	index1 = index2;
+	index2 = temp;
+	}
+if(index2 - index1 == 0 || index2 - index1 == 1)
+	{
+	if(index2 - index1 == 1)
+		{
+		swap(index1,index2);
+		}
+	}
+else
+	{
+	reverse(index1 + 1,index2 - 1);
+	swap(index1,index2);
+	}
+}
 void display()
 {
 if(head == NULL)
 	return;
 node<X> *ptr = head;
-cout<<"ELEMENTS: ";
 while(ptr != NULL)
 	{
 	std::cout<<(ptr -> data);
@@ -304,8 +342,17 @@ l.display();
 dog *d = new dog;
 d -> add();
 l.push(3,*d);
+cout<<"BEFORE SWAP..."<<endl;
 l.display();
 delete d;
+cout<<"AFTER REVERSE..."<<endl;
+l.reverse(0,l.size()-1);
+//l.swap(1,2);
+l.display();
+//l.swap(6,7);
+cout<<"REVERSING FROM 2 TO 4..."<<endl;
+l.reverse(2,4);
+l.display();
 l.clear();
 return 0;
 }
