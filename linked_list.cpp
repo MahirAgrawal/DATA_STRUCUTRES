@@ -360,8 +360,10 @@ friend ostream& operator <<(ostream &out,const dog& d);
 };
 ostream& operator <<(ostream &out,const dog& d)
 {
-cout<<"NAME OF DOG: "<<d.name<<endl;
-cout<<"PRICE OF DOG: "<<d.price<<endl;
+cout<<"I WAS USED!!!\n";
+out<<"NAME OF DOG: "<<d.name<<endl;
+out<<"PRICE OF DOG: "<<d.price<<endl;
+return out;
 }
 
 int main()
