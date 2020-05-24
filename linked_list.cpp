@@ -234,6 +234,10 @@ ptr1 -> data = ptr2 -> data;
 ptr2 -> data = temp_data;
 }
 }
+node<X>* get_head()
+{
+return head;
+}
 void reverse()
 {
 node<X>* ptr1 = head;
@@ -252,7 +256,22 @@ ptr1 = ptr2;
 }
 head = ptr3;
 }
-/*void reverse(int index1 = 0,int index2 = - 1)
+void reverse(node<X> *ptr)
+{
+node<X>* ptr1 = ptr -> next; 
+if((ptr1 -> next) == NULL)
+	{
+	head = ptr1;
+	ptr1 -> next = ptr;
+	return;
+	}
+else{
+reverse(ptr -> next);
+ptr1 -> next = ptr;
+}
+ptr -> next = NULL;
+}
+void reverse(int index1 = 0,int index2 = - 1)
 {
 if(index1 >= index || index1 < 0 || index2 >= index || index2 < 0)
 	return;
@@ -274,7 +293,7 @@ else
 	reverse(index1 + 1,index2 - 1);
 	swap(index1,index2);
 	}
-}*/
+}
 void display()
 {
 if(head == NULL)
@@ -364,7 +383,7 @@ cout<<"BEFORE SWAP..."<<endl;
 l.display();
 delete d;
 cout<<"AFTER REVERSE..."<<endl;
-l.reverse();
+l.reverse(l.get_head());
 //l.reverse(0,l.size()-1);
 //l.swap(1,2);
 l.display();
