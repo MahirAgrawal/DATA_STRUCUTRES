@@ -234,7 +234,25 @@ ptr1 -> data = ptr2 -> data;
 ptr2 -> data = temp_data;
 }
 }
-void reverse(int index1 = 0,int index2 = - 1)
+void reverse()
+{
+node<X>* ptr1 = head;
+node<X>* ptr2 = NULL;
+node<X>* ptr3 = NULL;
+ptr2 = (ptr1 -> next);
+(ptr1 -> next) = NULL;
+ptr3 = ptr1;
+ptr1 = ptr2;
+while(ptr1 != NULL)
+{
+ptr2 = (ptr1 -> next);
+ptr1 -> next = ptr3;
+ptr3 = ptr1;
+ptr1 = ptr2;
+}
+head = ptr3;
+}
+/*void reverse(int index1 = 0,int index2 = - 1)
 {
 if(index1 >= index || index1 < 0 || index2 >= index || index2 < 0)
 	return;
@@ -256,7 +274,7 @@ else
 	reverse(index1 + 1,index2 - 1);
 	swap(index1,index2);
 	}
-}
+}*/
 void display()
 {
 if(head == NULL)
@@ -346,13 +364,14 @@ cout<<"BEFORE SWAP..."<<endl;
 l.display();
 delete d;
 cout<<"AFTER REVERSE..."<<endl;
-l.reverse(0,l.size()-1);
+l.reverse();
+//l.reverse(0,l.size()-1);
 //l.swap(1,2);
 l.display();
 //l.swap(6,7);
-cout<<"REVERSING FROM 2 TO 4..."<<endl;
-l.reverse(2,4);
-l.display();
+//cout<<"REVERSING FROM 2 TO 4..."<<endl;
+/*l.reverse(2,4);
+l.display();*/
 l.clear();
 return 0;
 }
