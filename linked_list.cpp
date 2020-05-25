@@ -5,8 +5,10 @@
 #include<string.h>
 using namespace std;
 template<class X>
+class list;
+template<class X>
 class node{
-public:
+private:
 X data;
 node *next = NULL;
 node()
@@ -18,6 +20,7 @@ next = NULL;
 //cout<<"NODE WAS DESTROYED"<<endl;
 next = NULL;
 }
+friend class list<X>;
 };
 template<class X>
 class list{
