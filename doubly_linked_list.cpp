@@ -165,6 +165,25 @@ while(ptr != NULL)
 ptr = ptr -> next;}
 cout<<endl;
 }
+void reverse()
+{
+if(head == tail)
+	return;
+auto ptr = head;
+auto temp = head;
+while(ptr != tail)
+{
+temp = ptr -> previous;
+ptr -> previous = ptr -> next;
+ptr -> next = temp;
+ptr = ptr -> previous;
+}
+temp = ptr -> previous;
+ptr -> previous = ptr -> next;
+ptr -> next = temp;
+tail = head;
+head = ptr;
+}
 void reverse_display()
 {
 node<X>* ptr = tail;
@@ -224,9 +243,23 @@ l.pop_back();
 l.display();
 l.push_front(a);
 l.display();
+a = 54;
 l.push_front(a);
 l.display();
+a = 50;
 l.push_front(a);
+l.display();
+l.reverse();
+l.display();
+l.pop_back();
+l.display();
+l.pop_back();
+l.display();
+l.reverse();
+l.display();
+l.pop_back();
+l.display();
+l.reverse();
 l.display();
 return 0;
 }
