@@ -123,21 +123,78 @@ if(flag)
 return (ptr);}
 }
 //using namespace method3;
+namespace method4{
+class node{
+public:
+int data = 0;
+node *next = NULL;
+node()
+{
+data = 0;
+next = NULL;
+}};
+node* check_loop(node *ptr)
+{
+if(ptr == NULL)
+	{
+	cout<<"RETURNING\n";
+	return NULL;
+	}
+node *tortoise = ptr;
+node *hare = ptr;
+bool flag = false;
+while(1)
+{
+if(hare -> next == NULL)
+	flag = true;
+else if((hare -> next) -> next == NULL)
+	flag = true;
+else{
+hare = (hare -> next) -> next;
+tortoise = tortoise -> next;
+if(tortoise == hare)
+	flag = true;
+}	
+if(flag == true)
+	break;
+}
+//below method in if block returns the start of loop
+//method to find the start of loop in linked_list
+if(hare == tortoise)
+	{
+	hare = ptr;
+	while(hare != tortoise)
+		{
+		hare = hare -> next;
+		tortoise = tortoise -> next;
+		}
+	ptr = hare;
+	}
+//return null as if hare != tortoise then surely some node address is NULL
+else 
+	ptr = NULL;
+return ptr;}
+}
+using namespace method4;
 int main()
 {
 node *ptr = NULL,*temp = NULL;
 node *head = new node;
+cout<<head<<" ";
 head -> data = 12;
 head -> next = new node;
 ptr = head -> next;
-temp = ptr;
+cout<<ptr<<" ";
 ptr -> data = 13;
 ptr -> next = new node;
 ptr = ptr -> next;
+temp = ptr;
+cout<<ptr<<" ";
 ptr -> data = 14;
 ptr -> next = new node;
 ptr = ptr -> next;
+cout<<ptr<<" ";
 ptr -> data = 15;
-ptr -> next = temp;
+ptr -> next = NULL;
 cout<<"CHECK LOOP: "<<check_loop(head)<<"TEMP: "<<temp<<endl;
 }
