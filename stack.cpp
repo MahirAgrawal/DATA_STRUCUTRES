@@ -39,7 +39,7 @@ index = 0;
 }
 void push(X& d)
 {
-if(index > MAX_INDEX)
+if(index >= MAX_INDEX)
 	{
 	cout<<"STACK OVERFLOW!!!"<<endl;
 	return;
@@ -84,22 +84,32 @@ if(current == NULL)
 else
 	return (current -> data);
 }
+int size()
+{
+return index;
+}
+bool is_empty()
+{
+if(head == NULL)
+	return true;
+else 
+	return false;
+}
+bool is_full()
+{
+if(index == 9)
+	return true;
+else
+	return false;
+}
 void clear()
 {
 if(head == NULL)
 	return;
 else{
-node<X> *ptr = NULL;
-while(current != NULL)
-	{
-	ptr = current -> previous;
-	delete current;
-	current = ptr;
-	}
+while(head != NULL)
+	pop();
 }
-index = 0;
-head = 	NULL;
-current = NULL;
 }
 void display()
 {
@@ -118,15 +128,18 @@ clear();
 };
 int main()
 {
-char c = 'm';
 stack<char> s;
+char c = 'm';
 s.push(c);
 s.display();
 c = 'i';
 s.push(c);
 s.display();
-c = 'h';
 s.clear();
+cout<<s.is_empty()<<" ";
+cout<<s.is_full()<<endl;
+s.pop();
+c = 'h';
 s.push(c);
 s.display();
 c = 'i';
@@ -138,7 +151,27 @@ s.display();
 c = 'l';
 s.push(c);
 s.display();
-s.pop();
+cout<<s.is_empty()<<" ";
+cout<<s.is_full()<<endl;
+c = 'y';
+s.push(c);
+s.display();
+c = 'i';
+s.push(c);
+s.display();
+c = 'o';
+s.push(c);
+s.display();
+c = 's';
+s.push(c);
+s.display();
+c = 'o';
+s.push(c);
+s.display();
+cout<<s.is_empty()<<" ";
+cout<<s.is_full()<<endl;
+cout<<s.size();
+s.push(c);
 s.display();
 s.pop();
 s.display();
@@ -146,7 +179,9 @@ s.pop();
 s.display();
 s.pop();
 s.display();
-cout<<"after";
+s.pop();
+s.display();
+cout<<"after"<<endl;
 cout<<s.peek();
 return 0;
 }
