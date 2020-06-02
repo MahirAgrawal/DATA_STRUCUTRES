@@ -1,0 +1,62 @@
+#include"stack_duplicate.h"
+#include<string.h>
+stack<char> exp;
+stack<char> temp;
+bool is_operator(char c)
+{
+if(c == 42 || c == 43 || c == 45 || c== 47)
+	return true;
+else 
+	return false;
+}
+bool compare(char a,char b)
+{
+if(a == '*' || a == '/')
+	{
+	if(b == '*' || b == '/')
+		return false;
+	else 
+		return true;
+	}
+else
+	return false;
+}
+void transform(const char *str)
+{
+int s = strlen(str)-1;
+for(int i = s;i >= 0;i--)
+	{
+	if(i == s)
+		exp.push(str[i]);
+	else{
+	    if(is_operator(str[i]))
+		{
+		if(temp.is_empty());
+		while(compare(temp.peek(),str[i]))
+			{
+			exp.push(temp.peek());
+			temp.pop();
+			}
+		temp.push(str[i]);
+		}
+	    else{exp.push(str[i]);}
+	    }
+	cout<<"SIZE:"<<temp.size()<<"I:"<<i<<endl;
+	}
+while(!temp.is_empty())
+	{
+	exp.push(temp.peek());
+	temp.pop();
+	}
+}
+int main()
+{
+char expression[30];
+cin.getline(expression,30);
+fflush(stdin);
+transform(expression);
+exp.display();
+cout<<endl;
+exp.display();
+return 0;
+}

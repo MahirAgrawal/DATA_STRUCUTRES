@@ -4,7 +4,7 @@
 #define cout std::cout
 #define cin std::cin
 #define endl std::endl
-#define MAX_INDEX 10
+#define MAX_INDEX 50
 template<class X>
 class stack;
 template<class X>
@@ -21,7 +21,7 @@ previous = NULL;
 {
 next = NULL;
 previous = NULL;
-cout<<"NODE WAS DELETED..\n";
+//cout<<"NODE WAS DELETED..\n";
 }
 friend class stack<X>;
 };
@@ -37,7 +37,7 @@ head = NULL;
 current = NULL;
 index = 0;
 }
-void push(X& d)
+void push(X d)
 {
 if(index >= MAX_INDEX)
 	{
@@ -126,62 +126,3 @@ cout<<'\n';
 clear();
 }
 };
-int main()
-{
-stack<char> s;
-char c = 'm';
-s.push(c);
-s.display();
-c = 'i';
-s.push(c);
-s.display();
-s.clear();
-cout<<s.is_empty()<<" ";
-cout<<s.is_full()<<endl;
-s.pop();
-c = 'h';
-s.push(c);
-s.display();
-c = 'i';
-s.push(c);
-s.display();
-c = 'r';
-s.push(c);
-s.display();
-c = 'l';
-s.push(c);
-s.display();
-cout<<s.is_empty()<<" ";
-cout<<s.is_full()<<endl;
-c = 'y';
-s.push(c);
-s.display();
-c = 'i';
-s.push(c);
-s.display();
-c = 'o';
-s.push(c);
-s.display();
-c = 's';
-s.push(c);
-s.display();
-c = 'o';
-s.push(c);
-s.display();
-cout<<s.is_empty()<<" ";
-cout<<s.is_full()<<endl;
-cout<<s.size();
-s.push(c);
-s.display();
-s.pop();
-s.display();
-s.pop();
-s.display();
-s.pop();
-s.display();
-s.pop();
-s.display();
-cout<<"after"<<endl;
-cout<<s.peek();
-return 0;
-}
