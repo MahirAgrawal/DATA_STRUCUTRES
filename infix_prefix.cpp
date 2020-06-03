@@ -4,7 +4,7 @@ stack<char> exp;
 stack<char> temp;
 bool is_operator(char c)
 {
-if(c == 42 || c == 43 || c == 45 || c== 47)
+if(c == 42 || c == 43 || c == 45 || c == 47)
 	return true;
 else 
 	return false;
@@ -18,6 +18,8 @@ if(a == '*' || a == '/')
 	else 
 		return true;
 	}
+else if(a == ')')
+	return false;
 else
 	return false;
 }
@@ -26,10 +28,7 @@ void transform(const char *str)
 int s = strlen(str)-1;
 for(int i = s;i >= 0;i--)
 	{
-	if(i == s)
-		exp.push(str[i]);
-	else{
-	    if(is_operator(str[i]))
+	if(is_operator(str[i]))
 		{
 		if(temp.is_empty());
 		while(compare(temp.peek(),str[i]))
@@ -39,10 +38,22 @@ for(int i = s;i >= 0;i--)
 			}
 		temp.push(str[i]);
 		}
-	    else{exp.push(str[i]);}
-	    }
-	cout<<"SIZE:"<<temp.size()<<"I:"<<i<<endl;
-	}
+	else if(str[i] == ')')
+		    temp.push(str[i]);
+	else if(str[i] == '(')
+	    	{
+		while(temp.peek() != ')')
+			{
+			exp.push(temp.peek());
+			temp.pop();
+			}
+		temp.pop();
+		}
+	else if(str[i] == ' ')
+		continue;
+	else{exp.push(str[i]);}
+//cout<<"SIZE:"<<temp.size()<<"I:"<<i<<endl;
+	 }
 while(!temp.is_empty())
 	{
 	exp.push(temp.peek());
@@ -57,6 +68,6 @@ fflush(stdin);
 transform(expression);
 exp.display();
 cout<<endl;
-exp.display();
+//exp.display();
 return 0;
 }
