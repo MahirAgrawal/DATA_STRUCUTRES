@@ -18,8 +18,6 @@ if(a == '*' || a == '/')
 	else 
 		return true;
 	}
-else if(a == ')')
-	return false;
 else
 	return false;
 }

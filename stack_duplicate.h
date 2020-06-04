@@ -121,6 +121,16 @@ while(ptr != NULL)
 	}
 cout<<'\n';
 }
+void reverse_display()
+{
+node<X> *ptr = head;
+while(ptr != NULL)
+	{
+	cout<<ptr -> data<<" ";
+	ptr = ptr -> next;
+	}
+cout<<'\n';
+}
 ~stack()
 {
 clear();
