@@ -1,7 +1,7 @@
 #include"stack_duplicate.h"
 #include<string.h>
-stack<char> exp;
-stack<char> temp;
+stack<char> exp;//original stack on which prefix expression is written
+stack<char> temp;//to push and pop operators
 bool is_operator(char c)
 {
 if(c == 42 || c == 43 || c == 45 || c == 47)
