@@ -15,8 +15,10 @@ void transform(const char *str)
 int size = strlen(str);
 for(int i = size - 1;i >= 0;i--)//to read from right to left as postfix expression
   {
-  if(is_operator(str[i])
+  if(is_operator(str[i]))
 		  temp.push(str[i]);
+  else if(str[i] == ' ')
+	  continue;
   else{
   exp.push(str[i]);
   if(i > 0){
@@ -24,6 +26,7 @@ for(int i = size - 1;i >= 0;i--)//to read from right to left as postfix expressi
   temp.pop();}
   }
   }
+exp.display();
 }	
 int main()
 {

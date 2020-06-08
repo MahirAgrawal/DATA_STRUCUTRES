@@ -97,7 +97,7 @@ else
 }
 bool is_full()
 {
-if(index == 9)
+if(index == MAX_INDEX)
 	return true;
 else
 	return false;
@@ -116,17 +116,31 @@ void display()
 node<X> *ptr = current;
 while(ptr != NULL)
 	{
-	cout<<ptr -> data<<" ";
+	cout<<ptr -> data;
 	ptr = ptr -> previous;
 	}
 cout<<'\n';
+}
+void reverse()
+{
+node<X> *ptr = head;
+node<X> *temp_store = NULL;
+head = current;
+current = ptr;
+for(int i = 0;i < index;i++)
+  {
+  temp_store = ptr -> previous;
+  ptr -> previous = ptr -> next;
+  ptr -> next = temp_store;
+  ptr = ptr -> previous;
+  }
 }
 void reverse_display()
 {
 node<X> *ptr = head;
 while(ptr != NULL)
 	{
-	cout<<ptr -> data<<" ";
+	cout<<ptr -> data;
 	ptr = ptr -> next;
 	}
 cout<<'\n';
