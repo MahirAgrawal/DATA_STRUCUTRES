@@ -37,22 +37,6 @@ for(int i = 0;i < n-1;i++)
   if(flag)
     cout<<"BREAKED DUE TO SORTED!!";
 }
-template<class X>
-selection_sort(X *start,X *end)
-{
-int n = end - start + 1;
-X *max = start;
-for(int i = 0;i < n-1;i++)
-  { 
-  for(int j = 0;j < n-i;j++)
-    { 
-    if(start[j] > *max)
-      max = start+j;
-    }
-    if(max != start+n-1-i)
-      swap(max,start+n-1-i);
-  }
-}
 class point{
 int x,y;
 public:
@@ -92,20 +76,22 @@ int main()
 int arr[10] = {0};
 for(int i = 0;i < 10;i++)
   arr[i] = 10-i;
-//bubble_sort<int>(arr,arr+99);
-selection_sort(arr,arr+9);//OKAY TO NOT TO MENTION DATATYPES IN FUNCTIONS
+for(int i = 0;i < 10;i++)
+  cout<<arr[i]<<" ";
+cout<<endl;
+cout<<"starting!!";
+bubble_sort<int>(arr,arr+9);
+cout<<"EXECUTED!!";
 for(int i = 0;i < 10;i++)
   cout<<arr[i]<<" ";
 cout<<endl;
 char str[11] = {'m','i','h','i','r','l','a','g','r','a','\0'};
-//bubble_sort<char>(str,str+9);
-selection_sort(str,str+9);//OKAY TO NOT TO MENTION DATATYPES IN FUNCTIONS
+bubble_sort<char>(str,str+9);
 cout<<str<<endl;
 point p[10] = {{3,5},{2,3},{53,2},{1,2},{-13,32},{3,5},{2,6},{4,6},{9,4},{35}};
-//bubble_sort<point>(p,p+9);
-//cout<<"compare:"<<p[0]!=p[1]<<" "<<p[1]!=p[6]<<" "<<p[0]!=p[5]<<endl;
-selection_sort(p,p+9);//OKAY TO NOT TO MENTION DATATYPES IN FUNCTIONS
+bubble_sort<point>(p,p+9);
 for(int i = 0;i < 10;i++)
   cout<<(p[i])<<" ";
+cout<<"completed!!";
 return 0;
 }
