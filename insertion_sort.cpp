@@ -36,6 +36,6 @@ for(int i = 0;i < 10;i++)
 cout<<'\n';
 char str[6] = {'m','i','h','i','r','\0'};
 insertion_sort(str,str+4);
-cout<<str<<endl;
+cout<<str<<'\n';
 return 0;
 }
