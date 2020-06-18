@@ -1,4 +1,5 @@
 #include<iostream>
+#include<chrono>
 #include<cstdio>
 #include<conio.h>
 #define cout std::cout
@@ -73,15 +74,22 @@ return obj;
 }
 int main()
 {
-int arr[10] = {0};
-for(int i = 0;i < 10;i++)
-  arr[i] = 10-i;
-for(int i = 0;i < 10;i++)
+int n = 10000;
+int arr[n];
+srand(n);
+for(int i = 0;i < n;i++)
+  arr[i] = rand()%100000;
+/*for(int i = 0;i < n;i++)
   cout<<arr[i]<<" ";
-cout<<endl;
+cout<<endl;*/
 cout<<"starting!!";
-bubble_sort<int>(arr,arr+9);
-cout<<"EXECUTED!!";
+auto start = std::chrono::high_resolution_clock::now();
+bubble_sort<int>(arr,arr+n-1);
+auto end = std::chrono::high_resolution_clock::now();
+auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+cout<<"TIME TAKEN: "<<duration.count()<<endl;
+getch();
+cout<<"sorted!! click to print";
 for(int i = 0;i < 10;i++)
   cout<<arr[i]<<" ";
 cout<<endl;
