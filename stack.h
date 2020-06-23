@@ -5,6 +5,7 @@
 #define cin std::cin
 #define endl std::endl
 #define MAX_INDEX 50
+namespace stack{
 template<class X>
 class stack;
 template<class X>
@@ -125,7 +126,7 @@ cout<<'\n';
 {
 clear();
 }
-};
+};}
 /*
 int main()
 {
