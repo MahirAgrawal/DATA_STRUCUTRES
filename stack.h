@@ -22,7 +22,7 @@ previous = NULL;
 {
 next = NULL;
 previous = NULL;
-cout<<"NODE WAS DELETED..\n";
+//cout<<"NODE WAS DELETED..\n";
 }
 friend class stack<X>;
 };

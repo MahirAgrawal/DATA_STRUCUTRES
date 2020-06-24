@@ -33,7 +33,7 @@ int index = 0;
 public:
 parent_queue()
   {
-  cout<<"CONSTRUCTOR WAS CALLED!!"<<endl;
+  //cout<<"CONSTRUCTOR WAS CALLED!!"<<endl;
   int index = 0;
   head = NULL;
   tail = NULL;

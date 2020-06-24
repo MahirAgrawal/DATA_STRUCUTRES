@@ -37,7 +37,9 @@ class binary_tree{
 node<X> *root = NULL;
 int nodes = 0;
 stack::stack<X> my_stack;
+stack::stack<node<X>*> address_buffer;
 public:
+//stack::stack<node<X>*> address_buffer;
 binary_tree()
 {
 root = NULL;
@@ -163,6 +165,39 @@ while(flag)
     }
   }
 }
+node<X>* search_address(node<X> *root_t,X d)
+{
+//cout<<"ROOTROOTROOT "<<(unsigned int)root_t<<endl;
+node<X> *ptr = NULL;
+if(root_t == NULL)
+  ptr = NULL;
+else if(root_t -> data == d)
+  ptr = root_t;
+else if(d <= root_t -> data)
+  {
+  if(address_buffer.is_empty())
+    address_buffer.push(root_t);
+  else
+    {
+    address_buffer.pop();
+    address_buffer.push(root_t);
+    }
+  ptr = search_address(root_t -> left,d);
+  }
+else if(d > root_t -> data)
+  {
+  if(address_buffer.is_empty())
+    address_buffer.push(root_t);
+  else
+    {
+    address_buffer.pop();
+    address_buffer.push(root_t);
+    }
+  ptr = search_address(root_t -> right,d);
+  }
+//cout<<"PTRPTRPTR: "<<(unsigned int)ptr<<endl;
+return ptr;
+}
 int height(node<X> *t_root = NULL)
 {
 int left,right;
@@ -185,6 +220,20 @@ else if(temp_root -> right == NULL)
   return temp_root -> data;
 else
   return (max(temp_root -> right));
+}
+node<X>* max_address_from_left(node<X> *temp_root = NULL)
+{
+temp_root = temp_root -> left;
+while(temp_root -> right != NULL)
+  temp_root = temp_root -> right;
+return temp_root;
+}
+node<X>* min_address_from_right(node<X> *temp_root = NULL)
+{
+temp_root = temp_root -> right;
+while(temp_root -> left != NULL)
+  temp_root = temp_root -> left;
+return temp_root;
 }
 X min(node<X> *temp_root = NULL)
 {
@@ -240,28 +289,53 @@ else
   my_stack.push(ptr -> data);
 is_binary_tree(ptr -> right);
 }
-node<X>* search_address(node<X> *root_t,X d)
-{
-node<X> *ptr = NULL;
-if(root_t == NULL)
-  ptr = NULL;
-else if(root_t -> data == d)
-  ptr = root_t;
-else if(d <= root_t -> data)
-  ptr = search_address(root_t -> left,d);
-else if(d > root_t -> data)
-  ptr = search_address(root_t -> right,d);
-return ptr;
-}
 void remove(X d)
 {
-node<X> *ptr = search_address(this -> root,d);
-if((ptr -> left == NULL) && (ptr -> right == NULL))
-  delete ptr;
-else if(ptr -> left == NULL || ptr -> right == NULL)
+node<X> *ptr = NULL;
+address_buffer.clear();
+ptr = search_address(this -> root,d);
+if(ptr == NULL)
   {
-  if(ptr -> left)....//FROM HERE
+  cout<<"NO SUCH OBJECT EXIST!!"<<endl;
+  address_buffer.clear();
+  return;
   }
+if((ptr -> left == NULL) && (ptr -> right == NULL))
+  {
+  if((address_buffer.peek()->data) < ptr -> data)
+    address_buffer.peek() -> right = NULL;
+  else
+    address_buffer.peek()->left = NULL;
+  delete ptr;
+  }
+else if((ptr -> left == NULL) || (ptr -> right == NULL))
+  {
+  if((address_buffer.peek()->data) < ptr -> data)
+    {
+    if(ptr -> right == NULL)
+      address_buffer.peek() -> right = ptr -> left;
+    else if(ptr -> left == NULL)
+      address_buffer.peek() -> right = ptr -> right;
+    }
+  else
+    {
+    if(ptr -> right == NULL)
+      address_buffer.peek() -> left = ptr -> left;
+    else if(ptr -> left == NULL)
+      address_buffer.peek() -> left = ptr -> right;
+    }
+  delete ptr;
+  }
+  else
+  {
+  node<X> *maximum = max_address_from_left(ptr);
+  //cout<<"MINNIMUM ADDRESS:"<<(unsigned int)minimum<<"DATAMIN: "<<minimum->data<<endl;
+  X temp_data = maximum -> data;
+  remove(maximum -> data);
+  ptr -> data = temp_data;
+  }
+//cout<<"STACKISEMPTY: "<<address_buffer.is_empty()<<endl;
+address_buffer.clear();
 }
 void clear_root(node<X> *ptr = NULL)
 {
@@ -288,8 +362,8 @@ int n = 0,t = 0;
 cout<<"ENTER N:";
 cin>>n;
 fflush(stdin);
-timer t2;
-srand(n+2);
+//timer t2;
+//srand(n+2);
 for(int i = 0;i < n;i++)
   {
   //cout<<"ENTER THE ELEMENT TO BE INSERTED IN BINARY TREE: ";
@@ -297,19 +371,45 @@ for(int i = 0;i < n;i++)
   b.insert(t);
   //b.insert_recursively(b.get_root(),rand()%100);
   }
-t2.stop();
+//t2.stop();
 cout<<"DATA: ";
-cout<<"BREADTH FIRST PRINTING:";
-b.print_bf();
+//cout<<"BREADTH FIRST PRINTING:";
+//b.print_bf();
 cout<<endl;
 b.print_inorder(b.get_root());cout<<endl;
-b.print_preorder(b.get_root());cout<<endl;
-b.print_postorder(b.get_root());cout<<endl;
-if(b.search(12) == 0)
-  cout<<"NOT FOUND...."<<endl;
-cout<<b.search_address(b.get_root(),55)<<endl;
-cout<<b.search_address(b.get_root(),235)<<endl;
-b.search(7);
+//b.print_preorder(b.get_root());cout<<endl;
+//b.print_postorder(b.get_root());cout<<endl;
+for(int i = 0;i < 4;i++)
+{
+cout<<"ENTER THE ELEMENT TO BE DELETED: ";
+cin>>t;
+b.remove(t);
+cout<<"DATA: ";
+cout<<endl;
+b.print_inorder(b.get_root());cout<<endl;
+}
+//if(b.search(12) == 0)
+  //cout<<"NOT FOUND...."<<endl;
+/*node<int> *ptr = b.search_address(b.get_root(),55);
+if(ptr != NULL)
+  {
+  cout<<"PTR:"<<ptr -> data<<" "; 
+  cout<<(b.address_buffer.peek())-> data<<" ";
+  cout<<((b.address_buffer.peek()) -> left) -> data<<" ";
+  cout<<"??????"<<endl;
+  }
+else
+  b.address_buffer.clear();
+ptr = b.search_address(b.get_root(),235);
+if(ptr != NULL)
+  {
+  cout<<"PTR:"<<ptr<<endl; 
+  b.address_buffer.display();
+  cout<<"??????"<<endl;
+  }
+else
+  b.address_buffer.clear();
+  b.search(7);
 binary_tree<char> tree;
 cout<<"ENTER N:";
 cin>>n;
@@ -326,9 +426,9 @@ for(int i = 0;i < n;i++)
 t2.stop();
 cout<<"DATA: ";	
 tree.print_preorder(tree.get_root());cout<<endl;
-tree.print_postorder(tree.get_root());cout<<endl;
+tree.print_postorder(tree.get_root());cout<<endl;*/
 cout<<"max:"<<b.max(b.get_root())<<" MIN: "<<b.min(b.get_root());
 cout<<"Height = "<<b.height(b.get_root())<<endl;
-cout<<"Height = "<<tree.height(tree.get_root())<<endl;
+//cout<<"Height = "<<tree.height(tree.get_root())<<endl;
 return 0;
 }
