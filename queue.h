@@ -4,6 +4,7 @@
 #define cin std::cin
 #define endl std::endl
 #define MAX_INDEX 50
+namespace my_queue{
 template<class X>
 class parent_queue;
 template<class X>
@@ -138,9 +139,13 @@ void display()
     }
   cout<<endl;
   }  
+X seek()
+{
+return head -> data;
+}
 void clear()
   {
-    if(head == NULL);
+  if(head == NULL);
   else if(head == tail)
     delete head;
   else
@@ -157,6 +162,17 @@ void clear()
   head = NULL;
   tail = NULL;
   index = 0;
+  }
+  bool is_empty()
+  {
+  if(head == NULL)
+    return true;
+  else
+    return false;
+  }
+  X peek()
+  {
+  return (head -> data);	  
   }
 ~parent_queue()
   {
@@ -186,14 +202,17 @@ void delete_queue()
   {
   this -> clear();
   }
-};
-int main()
+};}
+/*int main()
 {
-queue<int> q;
+my_queue::queue<int> q;
+cout<<"MYNAME"<<endl;
 q.enqueue(12);
-q.show();
+cout<<q.peek()<<endl;
+//q.show();
 q.enqueue(13);
-q.show();
+//q.show();
+cout<<q.peek()<<endl;
 q.enqueue(14);
 q.show();
 q.enqueue(15);
@@ -233,4 +252,4 @@ q.show();
 q.dequeue();
 q.show();
 return 0;
-}
+}*/

@@ -4,6 +4,7 @@
 #include"my_time.h"
 #include<stdlib.h>
 #include"stack.h"
+#include"queue.h"
 #define cout std::cout
 #define cin std::cin
 #define endl std::endl
@@ -108,6 +109,33 @@ else
     }
   }
 }
+//BREADTH FIRST
+void print_bf()
+{
+my_queue::queue<node<X>*> q;
+if(root == NULL)
+  return;
+else
+  {
+  if(q.is_empty())
+    {
+    cout<<root -> data<<" ";
+    if(root -> left != NULL)
+      q.enqueue(root -> left);
+    if(root -> right != NULL)
+      q.enqueue(root -> right);
+    }
+  while(!q.is_empty())
+    {
+    cout<<q.peek() -> data<<" ";
+    if(q.peek() -> left != NULL)
+      q.enqueue(q.peek() -> left);
+    if(q.peek() -> right != NULL)
+      q.enqueue(q.peek() -> right);
+    q.dequeue();
+    }
+  }
+}
 bool search(X d)
 {
 bool flag = true;
@@ -168,6 +196,7 @@ else if(temp_root -> left == NULL)
 else
   return min(temp_root -> left);
 }
+//PRINT DEPTH FIRST
 void print_inorder(node<X> *ptr = NULL)
 {
 if(ptr == NULL)
@@ -192,11 +221,11 @@ print_postorder(ptr -> left);
 print_postorder(ptr -> right);
 cout<<ptr -> data<<" ";
 }
-void store(node<X> *ptr = NULL)
+void is_binary_tree(node<X> *ptr = NULL)
 {
 if(ptr == NULL)
   return;
-store(ptr -> left);
+is_binary_tree(ptr -> left);
 if(!(my_stack.is_empty()))
   {
   if(my_stack.peek() >= ptr -> data)
@@ -209,11 +238,7 @@ if(!(my_stack.is_empty()))
   }
 else 
   my_stack.push(ptr -> data);
-store(ptr -> right);
-}
-node<X>* get_root()
-{
-return root;
+is_binary_tree(ptr -> right);
 }
 node<X>* search_address(node<X> *root_t,X d)
 {
@@ -228,10 +253,16 @@ else if(d > root_t -> data)
   ptr = search_address(root_t -> right,d);
 return ptr;
 }
-//void remove(X d)
-//{
-//return (search_address(this -> root,d));
-//}
+void remove(X d)
+{
+node<X> *ptr = search_address(this -> root,d);
+if((ptr -> left == NULL) && (ptr -> right == NULL))
+  delete ptr;
+else if(ptr -> left == NULL || ptr -> right == NULL)
+  {
+  if(ptr -> left)....//FROM HERE
+  }
+}
 void clear_root(node<X> *ptr = NULL)
 {
 if(ptr == NULL)
@@ -241,11 +272,15 @@ clear_root(list[0]);
 clear_root(list[1]);
 delete ptr;
 }
+node<X>* get_root()
+{
+return root;
+}
 ~binary_tree()
 {
 clear_root(this->root);
-}
-};
+}};
+
 int main()
 {
 binary_tree<int> b;
@@ -264,6 +299,9 @@ for(int i = 0;i < n;i++)
   }
 t2.stop();
 cout<<"DATA: ";
+cout<<"BREADTH FIRST PRINTING:";
+b.print_bf();
+cout<<endl;
 b.print_inorder(b.get_root());cout<<endl;
 b.print_preorder(b.get_root());cout<<endl;
 b.print_postorder(b.get_root());cout<<endl;
