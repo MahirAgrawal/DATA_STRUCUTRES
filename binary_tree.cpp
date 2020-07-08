@@ -318,7 +318,7 @@ else if((ptr -> left == NULL) || (ptr -> right == NULL))
       address_buffer.peek() -> right = ptr -> right;
     }
   else
-    {
+   {
     if(ptr -> right == NULL)
       address_buffer.peek() -> left = ptr -> left;
     else if(ptr -> left == NULL)
