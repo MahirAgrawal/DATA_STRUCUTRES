@@ -26,7 +26,7 @@ node(X d)
   }
 ~node()
   {
-  cout<<"DELETED "<<this -> data<<endl;
+  //cout<<"DELETED "<<this -> data<<endl;
   X garbage;
   data = garbage;
   left = NULL;
@@ -81,7 +81,7 @@ void insert_recursively(X data,node<X> *temp_root)
   if(root == NULL)
     {
     root = new node<X>(data);
-    return;
+    temp_root = root;
     }
   else if(data <= temp_root -> data)
     {
@@ -97,6 +97,9 @@ void insert_recursively(X data,node<X> *temp_root)
     else
       insert_recursively(data,temp_root -> right);
     }
+  int balance = height(temp_root -> left) - height(temp_root -> right);
+  if(balance > 1 || balance < -1)
+   cout<<"UNBALANCED "<<balance<<" AT: "<<data<<" added."<<temp_root -> data<<endl;
   }
 //BREADTH-FIRST TRAVERSAL
 private:
@@ -184,8 +187,7 @@ int height(node<X> *temp_root)
     }
   }
 private:
-my_stack::stack<node<X>*> s;
-void search_address(X d,node<X> *temp_root)
+void search_address(X d,node<X> *temp_root,my_stack::stack<node<X>*>& s)
   {
   if(temp_root == NULL)
     s.pop();
@@ -199,14 +201,14 @@ void search_address(X d,node<X> *temp_root)
     if(!s.empty())
       s.pop();
     s.push(temp_root);
-    search_address(d,temp_root -> left);
+    search_address(d,temp_root -> left,s);
     }
   else if(d > temp_root -> data)
     {
     if(!s.empty())
       s.pop();
     s.push(temp_root);
-    search_address(d,temp_root -> right);
+    search_address(d,temp_root -> right,s);
     }
   }
 //FINDING INORDER WISE DATA BEFORE ROOT DATA
@@ -228,12 +230,10 @@ X smallest_data_larger_than_root(node<X> *temp_root)
 public:
 void delete_node(X d)
   {
-  search_address(d,root);
+  my_stack::stack<node<X>*> s;
+  search_address(d,root,s);
   if(s.empty())
-    {
-    cout<<"CANNOT FOUND...."<<endl;
     return;
-    }
   if(s.peek() -> left == NULL && s.peek() -> right == NULL)
     {
     if(s.peek() == root)
@@ -248,14 +248,15 @@ void delete_node(X d)
         s.pop() -> left = NULL;
       else
         s.pop() -> right = NULL;
-      cout<<"IF EMPTINESS: "<<s.empty()<<endl;
+      //cout<<"IF EMPTINESS: "<<s.empty()<<endl;
       }
     }
   else if(s.peek() -> left != NULL && s.peek() -> right != NULL)
     {
     node<X> *temp = s.pop();
-    s.pop();
-    cout<<"ELSE IF EMPTINESS: "<<s.empty()<<endl;
+    //cout<<"PEEK:"<<s.peek()<<endl;
+    //s.pop();
+    //cout<<"ELSE IF EMPTINESS: "<<s.empty()<<endl;
     X to_replace_with = largest_data_smaller_than_root(temp->left);
     if(to_replace_with == d)
       to_replace_with = smallest_data_larger_than_root(temp->right);
@@ -283,9 +284,64 @@ void delete_node(X d)
       else
         s.peek() -> left = node_to_be_restored;
       s.pop();
-      cout<<"ELSE EMPTINESS: "<<s.empty()<<endl;
+      //cout<<"ELSE EMPTINESS: "<<s.empty()<<endl;
       }
     }
+  }
+private:
+node<X>* delete_recursively(X d,node<X> *temp_root)
+  {
+  if(temp_root == NULL)
+    std::cerr<<d<<" NOT FOUND...."<<endl;
+  else if(temp_root -> data == d)
+    {
+    node<X> *node_to_be_restored = NULL;
+    if(temp_root -> left == NULL && temp_root -> right == NULL)
+      {
+      delete temp_root;
+      temp_root = NULL;
+      }
+    else if(temp_root->left != NULL && temp_root->right != NULL)
+      {
+      int to_replace_with = largest_data_smaller_than_root(temp_root -> left);
+      if(to_replace_with == d)
+        {
+        to_replace_with = smallest_data_larger_than_root(temp_root -> right);
+	temp_root -> right = delete_recursively(to_replace_with,temp_root -> right);
+	temp_root -> data = to_replace_with;
+	}
+      else
+        {
+        temp_root -> left = delete_recursively(to_replace_with,temp_root -> left);
+        temp_root -> data = to_replace_with;
+	}
+      }
+    else
+      {
+      if(temp_root -> left == NULL)
+        {
+	node_to_be_restored = temp_root -> right;
+	delete temp_root;
+	temp_root = node_to_be_restored;
+	}
+      else if(temp_root -> right == NULL)
+        {
+	node_to_be_restored = temp_root -> left;
+	delete temp_root;
+	temp_root = node_to_be_restored;
+	}
+      }
+    }
+  else if(d < temp_root -> data)
+    temp_root -> left = delete_recursively(d,temp_root -> left);
+  else if(d > temp_root -> data)
+    temp_root -> right = delete_recursively(d,temp_root -> right);
+  return temp_root;
+  }
+public:
+void delete_node_2(X d)
+  {
+  root = delete_recursively(d,this -> root);
   }
 void clear(node<X> *temp_root)
   {
@@ -308,19 +364,19 @@ node<X>* get_root()
 int main()
 {
 binary_tree<char> t;
-t.insert('m');
+t.insert_recursively('m',t.get_root());
 t.print_inorder(t.get_root());
 t.insert_recursively('i',t.get_root());
 t.print_inorder(t.get_root());
-t.insert('x');
+t.insert_recursively('x',t.get_root());
 t.print_inorder(t.get_root());
 t.insert_recursively('l',t.get_root());
 t.print_inorder(t.get_root());
-t.insert('a');
+t.insert_recursively('a',t.get_root());
 t.print_inorder(t.get_root());
 t.insert_recursively('g',t.get_root());
 t.print_inorder(t.get_root());
-t.insert('r');
+t.insert_recursively('r',t.get_root());
 t.print_inorder(t.get_root());
 t.insert_recursively('a',t.get_root());
 t.print_inorder(t.get_root());
@@ -331,23 +387,25 @@ cout<<"SEARCH RESULT: "<<t.search('l');
 cout<<"SEARCH RESULT: "<<t.search('z');
 cout<<"SEARCH RESULT: "<<t.search('x');
 cout<<"HEIGHT: "<<t.height(t.get_root())<<endl;
-t.insert('b');
+t.insert_recursively('b',t.get_root());
 t.print_breadth_first(t.get_root());
 t.print_inorder(t.get_root());
 cout<<"HEIGHT: "<<t.height(t.get_root())<<endl;
-t.clear(t.get_root());
+//t.clear(t.get_root());
 //cout<<t.get_root();
 cout<<"SEARCHING ADDRESSES:"<<endl;
-t.insert('b');
-t.insert_recursively('g',t.get_root());
-t.insert('h');t.insert('i');
-t.delete_node('b');
-cout<<t.get_root();t.print_inorder(t.get_root());
-t.delete_node('x');
-t.print_inorder(t.get_root());
-t.delete_node('j');
-t.print_inorder(t.get_root());
-t.delete_node('a');
+//t.insert('b');
+//t.insert_recursively('g',t.get_root());
+//t.insert('h');t.insert('i');
+t.delete_node_2('m');
+//cout<<t.get_root();t.print_inorder(t.get_root());
+t.delete_node_2('x');
+//t.print_inorder(t.get_root());
+t.delete_node_2('j');
+//t.print_inorder(t.get_root());
+t.delete_node_2('a');
+t.delete_node_2('r');
+t.delete_node_2('x');
 t.print_inorder(t.get_root());
 cout<<"HEIGHT: "<<t.height(t.get_root())<<endl;
 return 0;
