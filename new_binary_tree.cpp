@@ -393,14 +393,16 @@ node<X>* delete_recursively(X d,node<X> *temp_root)
     int balance = height(temp_root -> left) - height(temp_root -> right);
     if(balance > 1)
       {
-      if(d < (temp_root -> left) -> data)
+      //cout<<"IMBALANCE OCCURED....\n";
+      if(temp_root -> left -> left != NULL)
         temp_root =  right_rotation(temp_root);
       else
         temp_root = left_right_rotation(temp_root);
       }
     else if(balance < -1)
       {
-      if(d > (temp_root -> right) -> data)
+      //cout<<"IMBALANCE OCCURED....\n";
+      if(temp_root -> right -> right != NULL)
         temp_root =  left_rotation(temp_root);
       else
         temp_root = right_left_rotation(temp_root);
@@ -517,16 +519,16 @@ cout<<"HEIGHT: "<<t.height()<<endl;
 //cout<<"SEARCHING ADDRESSES:"<<endl;
 //t.insert('b');
 //t.insert('h');t.insert('i');
-//t.delete_node_2('m');
+//t.delete_recursively('m');
 //cout<<t.get_root();t.print_inorder(t.get_root());
-//t.delete_node_2('x');
+//t.delete_recursively('x');
 //t.print_inorder(t.get_root());
-//t.delete_node_2('j');
+t.delete_recursively('j');
 //t.print_inorder(t.get_root());
-//t.delete_node_2('a');
-//t.delete_node_2('r');
-//t.delete_node_2('x');
-//t.print_inorder(t.get_root());
-//cout<<"HEIGHT: "<<t.height()<<endl;
+t.delete_recursively('i');
+t.delete_recursively('e');
+//t.delete_recursively('x');
+t.print_preorder();
+cout<<"HEIGHT: "<<t.height()<<endl;
 return 0;
 }
