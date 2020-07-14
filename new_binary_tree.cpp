@@ -42,6 +42,68 @@ binary_tree()
   {
   root = NULL;	
   }
+private:
+//FUNCTION OVERLOADING WITHIN CLASS
+//THIS IS PRIVATE AND OTHER PROTOTYPE OF SAME NAME FUNCTION TAKES ONLY ONE ARGUMENT : DATA_TO_BE_INSERTED
+node<X>* insert_recursively(X data,node<X> *temp_root)
+  {
+  if(temp_root == NULL)
+    temp_root = new node<X>(data);
+  else if(data <= temp_root -> data)
+    temp_root -> left = insert_recursively(data,temp_root -> left);
+  else
+    temp_root -> right = insert_recursively(data,temp_root -> right);
+  int balance = height(temp_root -> left) - height(temp_root -> right);
+  if(balance > 1)
+    {
+    if(data < (temp_root -> left) -> data)
+     temp_root =  right_rotation(temp_root);
+    else
+      temp_root = left_right_rotation(temp_root);
+    }
+  else if(balance < -1)
+    {
+    if(data > (temp_root -> right) -> data)
+     temp_root =  left_rotation(temp_root);
+    else
+      temp_root = right_left_rotation(temp_root);
+    }
+  balance = height(temp_root -> left) - height(temp_root -> right);
+  if(balance > 1 || balance < -1)
+   cout<<"UNBALANCED "<<balance<<" AT: "<<temp_root -> data<<"WHEN ADDED:"<<data<<endl;
+  return temp_root;
+  }
+public:
+void insert_recursively(X data)
+  {
+  root = insert_recursively(data,root);
+  }
+private:
+//BREADTH-FIRST TRAVERSAL
+my_queue::queue<node<X>*> q;
+void print_breadth_first(node<X> *temp_root)
+{
+if(temp_root == NULL)
+  return;
+else
+  {
+  cout<<temp_root -> data<<" ";
+  if(temp_root -> left != NULL)
+    q.enqueue(temp_root -> left);
+  if(temp_root -> right != NULL)
+    q.enqueue(temp_root -> right);
+  if(q.empty());
+  else
+    print_breadth_first(q.dequeue());
+  }
+}
+public:
+void print_breadth_first()
+  {
+  print_breadth_first(this -> root);
+  }
+
+//INSERT BY ITERATIONS
 void insert(X data)
   {
   node<X> *ptr = new node<X>(data);
@@ -76,51 +138,7 @@ void insert(X data)
       }
     }
   }
-void insert_recursively(X data,node<X> *temp_root)
-  {
-  if(root == NULL)
-    {
-    root = new node<X>(data);
-    temp_root = root;
-    }
-  else if(data <= temp_root -> data)
-    {
-    if(temp_root -> left == NULL)
-      temp_root -> left = new node<X>(data);
-    else
-      insert_recursively(data,temp_root -> left);
-    }
-  else
-    {
-    if(temp_root -> right == NULL)
-      temp_root -> right = new node<X>(data);
-    else
-      insert_recursively(data,temp_root -> right);
-    }
-  int balance = height(temp_root -> left) - height(temp_root -> right);
-  if(balance > 1 || balance < -1)
-   cout<<"UNBALANCED "<<balance<<" AT: "<<data<<" added."<<temp_root -> data<<endl;
-  }
-//BREADTH-FIRST TRAVERSAL
 private:
-my_queue::queue<node<X>*> q;
-public:
-void print_breadth_first(node<X> *temp_root)
-{
-if(temp_root == NULL)
-  return;
-else
-  {
-  cout<<temp_root -> data<<" ";
-  if(temp_root -> left != NULL)
-    q.enqueue(temp_root -> left);
-  if(temp_root -> right != NULL)
-    q.enqueue(temp_root -> right);
-  if(q.empty());
-  else
-    print_breadth_first(q.dequeue());
-  }
-}
 //DEPTH-FIRST TRAVERSAL
 void print_preorder(node<X> *temp_root)
   {
@@ -134,6 +152,12 @@ void print_preorder(node<X> *temp_root)
   if(temp_root == root)
     cout<<endl;
   }
+public:
+void print_preorder()
+  {
+  print_preorder(this -> root);
+  }
+private:
 void print_inorder(node<X> *temp_root)
   {
   if(temp_root == NULL)
@@ -146,6 +170,12 @@ void print_inorder(node<X> *temp_root)
   if(temp_root == root)
     cout<<endl;
   }
+public:
+void print_inorder()
+  {
+  print_inorder(this -> root);
+  }
+private:
 void print_postorder(node<X> *temp_root)
   {
   if(temp_root == NULL)
@@ -158,7 +188,13 @@ void print_postorder(node<X> *temp_root)
   if(temp_root == root)
     cout<<endl;
   }
-bool search(X d,node<X> *ptr = NULL)
+public:
+void print_postorder()
+  {
+  print_postorder(this -> root);
+  }
+private:
+bool search(X d,node<X> *ptr)
   {
   if(ptr == NULL)
     ptr = root;
@@ -171,6 +207,14 @@ bool search(X d,node<X> *ptr = NULL)
   else
     return false;
   }
+public:
+bool search(X d)
+  {
+  return (search(d,root));
+  }
+//TO GET HEIGHT OF ROOT OR ANY OTHER NODE BUT IT IS PRIVATE
+//BELOW THIS, A PUBLIC FUNCTION OF HEIGHT IS PRESENT WHICH IS ONLY TO GET HEIGHT OF ROOT i.e. OF TREE
+private:
 int height(node<X> *temp_root)
   {
   if(temp_root == NULL)
@@ -186,6 +230,11 @@ int height(node<X> *temp_root)
     return max_height;	  
     }
   }
+public:
+int height()
+{ 
+return (height(this -> root));
+}
 private:
 void search_address(X d,node<X> *temp_root,my_stack::stack<node<X>*>& s)
   {
@@ -228,6 +277,7 @@ X smallest_data_larger_than_root(node<X> *temp_root)
     return (smallest_data_larger_than_root(temp_root -> left));
   }
 public:
+//BY RECURSION BUT USING STACK
 void delete_node(X d)
   {
   my_stack::stack<node<X>*> s;
@@ -248,15 +298,11 @@ void delete_node(X d)
         s.pop() -> left = NULL;
       else
         s.pop() -> right = NULL;
-      //cout<<"IF EMPTINESS: "<<s.empty()<<endl;
       }
     }
   else if(s.peek() -> left != NULL && s.peek() -> right != NULL)
     {
     node<X> *temp = s.pop();
-    //cout<<"PEEK:"<<s.peek()<<endl;
-    //s.pop();
-    //cout<<"ELSE IF EMPTINESS: "<<s.empty()<<endl;
     X to_replace_with = largest_data_smaller_than_root(temp->left);
     if(to_replace_with == d)
       to_replace_with = smallest_data_larger_than_root(temp->right);
@@ -284,17 +330,23 @@ void delete_node(X d)
       else
         s.peek() -> left = node_to_be_restored;
       s.pop();
-      //cout<<"ELSE EMPTINESS: "<<s.empty()<<endl;
       }
     }
   }
+//DELETING NODE OR ELEMENT BY RECURSION BUT THIS IS PRIVATE 
+//BELOW THIS FUNCTION, A PUBLIC VERSION IS THERE WHICH DELETES A NODE FROM ROOT ONLY
 private:
 node<X>* delete_recursively(X d,node<X> *temp_root)
   {
+  bool flag = true;
   if(temp_root == NULL)
-    std::cerr<<d<<" NOT FOUND...."<<endl;
-  else if(temp_root -> data == d)
     {
+    std::cerr<<d<<" NOT FOUND...."<<endl;
+    flag = false;
+    }
+  else if(temp_root -> data == d)
+    {  
+    flag = false;
     node<X> *node_to_be_restored = NULL;
     if(temp_root -> left == NULL && temp_root -> right == NULL)
       {
@@ -336,13 +388,35 @@ node<X>* delete_recursively(X d,node<X> *temp_root)
     temp_root -> left = delete_recursively(d,temp_root -> left);
   else if(d > temp_root -> data)
     temp_root -> right = delete_recursively(d,temp_root -> right);
+  if(flag)
+    {
+    int balance = height(temp_root -> left) - height(temp_root -> right);
+    if(balance > 1)
+      {
+      if(d < (temp_root -> left) -> data)
+        temp_root =  right_rotation(temp_root);
+      else
+        temp_root = left_right_rotation(temp_root);
+      }
+    else if(balance < -1)
+      {
+      if(d > (temp_root -> right) -> data)
+        temp_root =  left_rotation(temp_root);
+      else
+        temp_root = right_left_rotation(temp_root);
+      }
+    }
   return temp_root;
   }
 public:
-void delete_node_2(X d)
+//BY RECURSION
+void delete_recursively(X d)
   {
   root = delete_recursively(d,this -> root);
   }
+//CLEARING THE TREE FROM GIVEN NODE
+//THIS IS PRIVATE BUT PUBLIC VERSION IS AVAILABLE BELOW IT WHICH CLEARS THE TREE FROM ROOT
+private:
 void clear(node<X> *temp_root)
   {
   if(temp_root == NULL)
@@ -352,61 +426,107 @@ void clear(node<X> *temp_root)
   delete temp_root;
   root = NULL;
   }
-node<X>* get_root()
+public:
+void clear()
   {
-  return root;
+  clear(this -> root);
   }
+//ROTATIONS
+
+//LEFT ROTATION
+node<X>* left_rotation(node<X> *temp_root)
+  {
+  node<X> *node_to_be_returned = temp_root -> right;
+  node<X> *temp = temp_root -> right -> left;
+  temp_root -> right -> left = temp_root;
+  temp_root -> right = temp;
+  return node_to_be_returned;
+  }
+
+//RIGHT ROTATION
+node<X>* right_rotation(node<X> *temp_root)
+  {
+  node<X> *node_to_be_returned = temp_root -> left;
+  node<X> *temp = temp_root -> left -> right;
+  temp_root -> left -> right = temp_root;
+  temp_root -> left = temp;
+  return node_to_be_returned;
+  }
+
+//RIGHT - LEFT ROTATION : 2 ROTATION
+node<X>* right_left_rotation(node<X> *grandparent)
+  {
+  node<X> *parent = grandparent -> right;
+  node<X> *temp = parent -> left -> right;
+  grandparent -> right -> left -> right = parent;
+  grandparent -> right = parent -> left;
+  parent -> left = temp;
+  return (left_rotation(grandparent));
+  }
+
+//LEFT - RIGHT ROTATION : 2 ROTATION
+node<X>* left_right_rotation(node<X> *grandparent)
+ {
+ node<X> *parent = grandparent -> left;
+ node<X> *temp = parent -> right -> left;
+ grandparent -> left = parent -> right;
+ grandparent -> left -> left = parent;
+ parent -> right = temp;
+ return (right_rotation(grandparent));
+ }
+
 ~binary_tree()
   {
-  this -> clear(this -> get_root());
+  clear(this -> root);
   }
 };
 int main()
 {
 binary_tree<char> t;
-t.insert_recursively('m',t.get_root());
-t.print_inorder(t.get_root());
-t.insert_recursively('i',t.get_root());
-t.print_inorder(t.get_root());
-t.insert_recursively('x',t.get_root());
-t.print_inorder(t.get_root());
-t.insert_recursively('l',t.get_root());
-t.print_inorder(t.get_root());
-t.insert_recursively('a',t.get_root());
-t.print_inorder(t.get_root());
-t.insert_recursively('g',t.get_root());
-t.print_inorder(t.get_root());
-t.insert_recursively('r',t.get_root());
-t.print_inorder(t.get_root());
-t.insert_recursively('a',t.get_root());
-t.print_inorder(t.get_root());
-t.print_preorder(t.get_root());
-t.print_postorder(t.get_root());
-t.print_breadth_first(t.get_root());
-cout<<"SEARCH RESULT: "<<t.search('l');
-cout<<"SEARCH RESULT: "<<t.search('z');
-cout<<"SEARCH RESULT: "<<t.search('x');
-cout<<"HEIGHT: "<<t.height(t.get_root())<<endl;
-t.insert_recursively('b',t.get_root());
-t.print_breadth_first(t.get_root());
-t.print_inorder(t.get_root());
-cout<<"HEIGHT: "<<t.height(t.get_root())<<endl;
-//t.clear(t.get_root());
+t.insert_recursively('a');
+//t.print_inorder();
+t.insert_recursively('b');
+//t.print_inorder();
+t.insert_recursively('c');
+//t.print_inorder();
+t.insert_recursively('d');
+//t.print_inorder();
+t.insert_recursively('e');
+//t.print_inorder();
+t.insert_recursively('f');
+//t.print_inorder();
+t.insert_recursively('g');
+//t.print_inorder();
+t.insert_recursively('h');
+//t.print_inorder();
+t.insert_recursively('i');
+t.insert_recursively('j');
+t.print_preorder();
+t.print_inorder();
+t.print_postorder();
+t.print_breadth_first();
+//cout<<"SEARCH RESULT: "<<t.search('l');
+//cout<<"SEARCH RESULT: "<<t.search('z');
+//cout<<"SEARCH RESULT: "<<t.search('x');
+//cout<<"HEIGHT: "<<t.height()<<endl;
+//t.print_breadth_first();
+//t.print_inorder();
+cout<<"HEIGHT: "<<t.height()<<endl;
+//t.clear();
 //cout<<t.get_root();
-cout<<"SEARCHING ADDRESSES:"<<endl;
+//cout<<"SEARCHING ADDRESSES:"<<endl;
 //t.insert('b');
-//t.insert_recursively('g',t.get_root());
 //t.insert('h');t.insert('i');
-t.delete_node_2('m');
+//t.delete_node_2('m');
 //cout<<t.get_root();t.print_inorder(t.get_root());
-t.delete_node_2('x');
+//t.delete_node_2('x');
 //t.print_inorder(t.get_root());
-t.delete_node_2('j');
+//t.delete_node_2('j');
 //t.print_inorder(t.get_root());
-t.delete_node_2('a');
-t.delete_node_2('r');
-t.delete_node_2('x');
-t.print_inorder(t.get_root());
-cout<<"HEIGHT: "<<t.height(t.get_root())<<endl;
+//t.delete_node_2('a');
+//t.delete_node_2('r');
+//t.delete_node_2('x');
+//t.print_inorder(t.get_root());
+//cout<<"HEIGHT: "<<t.height()<<endl;
 return 0;
 }
