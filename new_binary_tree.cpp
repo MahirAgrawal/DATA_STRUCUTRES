@@ -458,24 +458,26 @@ node<X>* right_rotation(node<X> *temp_root)
 //RIGHT - LEFT ROTATION : 2 ROTATION
 node<X>* right_left_rotation(node<X> *grandparent)
   {
-  node<X> *parent = grandparent -> right;
-  node<X> *temp = parent -> left -> right;
-  grandparent -> right -> left -> right = parent;
-  grandparent -> right = parent -> left;
-  parent -> left = temp;
+  grandparent -> right = right_rotation(grandparent -> right);
+  //node<X> *parent = grandparent -> right;
+  //node<X> *temp = parent -> left -> right;
+  //grandparent -> right -> left -> right = parent;
+  //grandparent -> right = parent -> left;
+  //parent -> left = temp;
   return (left_rotation(grandparent));
   }
 
 //LEFT - RIGHT ROTATION : 2 ROTATION
 node<X>* left_right_rotation(node<X> *grandparent)
- {
- node<X> *parent = grandparent -> left;
- node<X> *temp = parent -> right -> left;
- grandparent -> left = parent -> right;
- grandparent -> left -> left = parent;
- parent -> right = temp;
- return (right_rotation(grandparent));
- }
+  {
+  grandparent -> left = left_rotation(grandparent -> left);
+  //node<X> *parent = grandparent -> left;
+  //node<X> *temp = parent -> right -> left;
+  //grandparent -> left = parent -> right;
+  //grandparent -> left -> left = parent;
+  //parent -> right = temp;
+  return (right_rotation(grandparent));
+  }
 
 ~binary_tree()
   {
