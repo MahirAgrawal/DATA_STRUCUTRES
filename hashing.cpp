@@ -18,7 +18,7 @@
 //UPDATE_KEY()
 //SEARCH_KEY()
 //PRINT() : ENTIRE HASH TABLE
-class hash;
+class simple_hash;
 struct hash_slot{
 float marks;
 string name;
@@ -32,9 +32,9 @@ hash_slot()
   name.clear();
   marks = -1;
   }
-friend class hash;
+friend class simple_hash;
 };
-class hash{
+class simple_hash{
 hash_slot hash_table[MAX_SIZE];
 int random = 0;
 int hash_function(string s)
@@ -55,7 +55,7 @@ bool search(string s)
     return false;
   }
 public:
-hash()
+simple_hash()
   {
   srand(time(NULL));
   random = rand();
@@ -128,14 +128,14 @@ void print_table()
     if(hash_table[i].name.size() != 0)
       cout<<hash_table[i].name<<" "<<hash_table[i].marks<<endl;
     else
-      cout<<"------   -------"<<endl;
+      cout<<"-- --"<<endl;
     }
   cout<<"END"<<endl;
   }
 };
 int main()
 {
-hash h;
+simple_hash h;
 h.add("mihir",20);
 h.add("mihir",234.5);
 cout<<"MARKS:"<<h.get("mihi")<<endl;
