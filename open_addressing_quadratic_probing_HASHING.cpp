@@ -93,8 +93,8 @@ void add(string s,X d)
       cout<<"TRY UPDATING INSTEAD!!"<<endl;
       return;
       }
-    index = next_index(original_index,counter);
     counter++;
+    index = next_index(original_index,counter);
     }
   hash_slot[index].name.assign(s);
   hash_slot[index].data = d;
