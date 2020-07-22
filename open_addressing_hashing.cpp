@@ -49,9 +49,9 @@ int hash_function(string& name)
     hash += (pow(i,31)+name.at(i));
   return (hash%MAX_LENGTH);
   }
-int next_index(int index)
+int next_index(int index,int counter)
   {
-  return (index+1)%MAX_LENGTH;
+  return ((int)(index+pow(counter,2)))%MAX_LENGTH;
   }
 public:
 hash_table()
@@ -77,7 +77,7 @@ void resizing()
   }
 void add(string s,X d)
   {
-
+  int counter = 0;
   if(s.size() == 0)
     {
     cout<<"CAN'T ADD DATA WITHOUT NAME!"<<endl;
@@ -93,19 +93,14 @@ void add(string s,X d)
       cout<<"TRY UPDATING INSTEAD!!"<<endl;
       return;
       }
-    index = next_index(index);
-    if(index == original_index)
-      {
-      cout<<"THE TABLE IS FULL!";
-      return;
-      }
+    index = next_index(original_index,counter);
+    counter++;
     }
   hash_slot[index].name.assign(s);
   hash_slot[index].data = d;
   keys++;
   double load_factor = ((double)keys)/MAX_LENGTH;
   if(load_factor > 0.5)
-    //cout<<"RESIZING ON ADDING "<<s<<endl;
     resizing();
   }
 int size_of_table()
@@ -114,14 +109,16 @@ int size_of_table()
   }
 private:
 int search(string& n)
-  {
+  { 
+  int counter = 0;
   auto index = hash_function(n);
   auto original_index = index;
   do{
   if(hash_slot[index].name == n)
     return index;
   else
-    index = next_index(index);
+    index = next_index(original_index,counter);
+  counter++;
   }while(hash_slot[index].name != "" && index != original_index);
   return -1;
   }
