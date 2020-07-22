@@ -1,4 +1,3 @@
-//QUADRATIC PROBING
 #include<iostream>
 #include<string>
 #include<cmath>
