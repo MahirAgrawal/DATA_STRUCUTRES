@@ -33,8 +33,14 @@ struct slot{
     {
     name = "";
     }
+  ~slot()
+    {
+    name = "";
+    cout<<"DELETED!!"<<endl;
+    }
   };
 int MAX_LENGTH;
+int keys;
 slot *hash_slot;
 int hash_function(string& name)
   {
@@ -45,22 +51,33 @@ int hash_function(string& name)
   }
 int next_index(int index)
   {
-  return ((index+1)%MAX_LENGTH);
+  return (index+1)%MAX_LENGTH;
   }
 public:
 hash_table()
   {
-  MAX_LENGTH = 31;
+  keys = 0;
+  MAX_LENGTH = 11;
   hash_slot = new slot[MAX_LENGTH];  
   }
-/*void resizing()
+void resizing()
   {
-  temp_hash_slot = new slot[next_prime(MAX_LENGTH)];
-  for()
+  keys = 0;
+  int TEMP_MAX_LENGTH = MAX_LENGTH;
+  MAX_LENGTH = next_prime(MAX_LENGTH);
+  slot *temp_hash_slot = hash_slot;
+  hash_slot = new slot[MAX_LENGTH];
+  for(int i = 0;i < TEMP_MAX_LENGTH;i++)
+    {
+    if(temp_hash_slot[i].name == "" || temp_hash_slot[i].name == "DELETED")
+      continue;
+    add(temp_hash_slot[i].name,temp_hash_slot[i].data);
+    }
+  delete []temp_hash_slot;
   }
-*/
 void add(string s,X d)
   {
+
   if(s.size() == 0)
     {
     cout<<"CAN'T ADD DATA WITHOUT NAME!"<<endl;
@@ -83,9 +100,20 @@ void add(string s,X d)
       return;
       }
     }
-    hash_slot[index].name.assign(s);
-    hash_slot[index].data = d;
-  } 
+  hash_slot[index].name.assign(s);
+  hash_slot[index].data = d;
+  keys++;
+  double load_factor = ((double)keys)/MAX_LENGTH;
+  if(load_factor >= 0.5)
+    {
+    cout<<"RESIZING ON ADDING "<<s<<endl;
+    resizing();
+    }
+  }
+int size_of_table()
+  {
+  return MAX_LENGTH;
+  }
 private:
 int search(string& n)
   {
@@ -133,6 +161,7 @@ void delete_key(string n)
   else
     {
     hash_slot[index].name = "DELETED";
+    keys--;
     return;
     }
   }
@@ -174,7 +203,12 @@ h.update("Lalit",100);
 h.update("Mihir",12);
 cout<<h.search_key("Lalit")<<endl;
 cout<<h.search_key("Llt")<<endl;
+h.add("Rk",1763);
+h.add("Uk",13.3);
+h.add("Kk",1.33);
+h.add("Lk",1.3);
+h.add("Ghk",3);
 h.print_table();
-cout<<next_prime(34);
+cout<<h.size_of_table();
 return 0;
 }
