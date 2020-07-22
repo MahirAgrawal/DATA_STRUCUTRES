@@ -116,9 +116,8 @@ int search(string& n)
   do{
   if(hash_slot[index].name == n)
     return index;
-  else
-    index = next_index(original_index,counter);
   counter++;
+  index = next_index(original_index,counter);
   }while(hash_slot[index].name != "" && index != original_index);
   return -1;
   }
@@ -168,7 +167,7 @@ void print_table()
     if(hash_slot[i].name == "" || hash_slot[i].name == "DELETED")
       cout<<"--- ---"<<endl;
     else
-      cout<<"NAME: "<<hash_slot[i].name<<" "<<"MARKS: "<<hash_slot[i].data<<endl;
+      cout<<hash_slot[i].name<<" "<<hash_slot[i].data<<endl;
     }
   cout<<"END"<<endl;
   }
@@ -191,13 +190,27 @@ h.add("Mahir",103.3);
 h.add("Mihi",43);
 h.add("Kk",34);
 h.add("Mk",133);
+h.add("Ansh",54.3);
+h.add("Raj",90.6);
+h.add("Ans",89.55);
+h.add("Anshul",103.3);
+h.add("Ty",54.3);
+h.add("Yk",90.6);
+h.add("Oppo",89.55);
+h.add("rara",103.3);
+h.add("Vira",54.3);
+h.add("Vihan",90.6);
+h.add("Shreya",89.55);
+h.add("Mahirra",103.3);
 h.print_table();
 h.delete_key("Mihir");
 h.delete_key("Mihir");
 h.update("Lalit",100);
 h.update("Mihir",12);
+cout<<"SEARCH:"<<endl;
+cout<<h.search_key("Rupal")<<endl;
 cout<<h.search_key("Lalit")<<endl;
-cout<<h.search_key("Llt")<<endl;
+cout<<"serach ends..."<<endl;
 h.add("Rk",1763);
 h.add("Uk",13.3);
 h.add("Kk",1.33);
