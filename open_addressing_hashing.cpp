@@ -36,7 +36,7 @@ struct slot{
   ~slot()
     {
     name = "";
-    cout<<"DELETED!!"<<endl;
+    //cout<<"DELETED!!"<<endl;
     }
   };
 int MAX_LENGTH;
@@ -104,11 +104,9 @@ void add(string s,X d)
   hash_slot[index].data = d;
   keys++;
   double load_factor = ((double)keys)/MAX_LENGTH;
-  if(load_factor >= 0.5)
-    {
-    cout<<"RESIZING ON ADDING "<<s<<endl;
+  if(load_factor > 0.5)
+    //cout<<"RESIZING ON ADDING "<<s<<endl;
     resizing();
-    }
   }
 int size_of_table()
   {
