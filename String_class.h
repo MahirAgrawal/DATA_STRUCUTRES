@@ -1,7 +1,3 @@
-//(27/7/2020)ONE THING STILL NEEDS IMPROVEMENT
-//THE ARRAY INSIDE STRING IS FIXED SIZED AND SO I WANT TO MAKE SUCH STRING CLASS IN WHICH ARRAY SIZE EXPANDS WHENEVER IT NEEDS TO DO SO!!!!!!!!!!!!!!!!!!!!
-
-//Edit(28/7/2020): THE ABOVE PROBLEM IS SOLVED AND SO NOW STRING CLASS CONTAINS FLEXIBLE ARRAY WHICH INCREASES ON INCREASE IN THE   CONTENT OF STRING, SO THIS ALLOWS US TO HAVE DIFFERENT 'CORE ARRAY SIZES' FOR DIFFERENT STRING BASED UPON THEIR CONTENT LENGTH.
 #include<iostream>
 #include<cstring>
 #define cout std::cout
@@ -54,29 +50,6 @@ void operator =(String& s){
     start[i] = s.start[i];
   index = s.index;
   }
-/*String& operator +(const char *to_merge){
-  if(new_string != NULL)  //this saves memory
-    delete new_string;
-  new_string = new String(*this);
-  while(*to_merge != '\0'){
-    new_string -> start[new_string -> index] = *to_merge;
-    (new_string -> index)++;
-    to_merge++; 
-    }
-  return *new_string; //Here it causes memory leak beacause this reference is of free store's object and then it is passed to string                      //Now whenever the String is passed to string then it makes a new copy(deep copy) and so this will be wasted!
-                      //Can't delete because there is no way to delete once it's return and also once return there is no way to know                      //to know from which function it was created
-		      //like e.g. if now i include code that will delete it when it is passed to string object by copy constructor                        //then all such string passed to copy constructor will be deleted(freed)
-		      //So this function equivalent can be useful if there would be automatic garbage collector(like in java)
-		      //I THINK IT CAN CAUSE A MAJOR MEMORY LEAK PROBLEM!!!!
-		      //
-		      //SOLVED THE PROBLEM WITH SIMPLY DECLARING STATIC MEMBER CALLED 'new_string'
-		      //NOW WHENEVER THIS VARIABLE IS USED FIRST IT WILL BE CHECKED THAT IT IS NULL OR NOT
-		      //IF(!NULL) -> IT WILL DELETE THE EARLIER ALLOCATED MEMORY THEN ONLY WILL GO AHEAD TO ALLOCATE NEW
-		      //NOW IN WORST CASE IT CAN HAPPEN THAT 'operator +' IS USED ONCE THEN ONLY THE MEMORY REMAIN WASTED
-		      //BUT AS SOON AS THE FUNCTION IS AGAIN CALLED THEN THE PREVIOUS MEMORY IS CLEARED
-		      //
-		      //SEE CODE WITH COMMENT 'SAVES MEMORY' FOR IMPLEMENTATION
-  }*/
 String& operator +(String& s){
   if(new_string != NULL)//this saves memory
     delete new_string;
@@ -151,32 +124,3 @@ std::istream& operator >>(std::istream& in,String& s){
   s = array;
   return in;
   }
-/*
-int main(){
-String s("Khushi ");
-s = "Agrawal";
-String str = s + " Agrawal";//str = khushi agrawal
-str = s + " Agrawal"; 
-String t;
-t = s;//t = khushi
-cout<<"Str:"<<str<<endl;
-cout<<"T:"<<t<<endl;;
-s = str + t;//khushi agrawalkhushi
-cout<<"S:"<<s<<endl;
-String father("Lalit");
-String firstname("Mihir ");
-String name = firstname + father;
-cout<<name.length();
-cout<<"Name:"<<name;//<<endl;
-String string;
-cout<<"ENTER THE NAME: ";
-cin>>string;
-cout<<string<<endl;
-cout<<s.max_size()<<endl;
-s = s + "mihir";
-cout<<s.max_size()<<endl;
-s = s + "Lalit Agrawal are Lalit's children";
-cout<<s.max_size()<<endl;
-cout<<s<<endl;
-return 0;
-}*/
