@@ -61,11 +61,11 @@ index++;}
 void push(int i,X& d)
 {
 if(i < 0 || i >= index)
-	return;
+  return;
 else if(i == 0)
-	push_front(d);
+  push_front(d);
 else if(i == (index - 1))
-	push_back(d);
+  push_back(d);
 else{
 node<X>* ptr = head;
 for(int j = 0;j < (i-1);j++)

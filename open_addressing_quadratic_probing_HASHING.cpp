@@ -65,7 +65,7 @@ void resizing()
   {
   keys = 0;
   int TEMP_MAX_LENGTH = MAX_LENGTH;
-  MAX_LENGTH = next_prime(MAX_LENGTH);
+  MAX_LENGTH = next_prim(MAX_LENGTH);
   slot *temp_hash_slot = hash_slot;
   hash_slot = new slot[MAX_LENGTH];
   for(int i = 0;i < TEMP_MAX_LENGTH;i++)
