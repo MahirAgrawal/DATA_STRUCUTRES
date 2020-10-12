@@ -141,7 +141,7 @@ class RedBlack{
 	  traversalptr = recolor(traversalptr);
 	  //cout<<"RECOLORING.."<<endl;
 	  }
-	else{//AUNT RIGHT TO GRANDPARENT IS BLACK
+	else{//AUNT TO RIGHT TO GRANDPARENT IS BLACK
           //cout<<"ROTATING.."<<endl;
 	  if(PARENT(traversalptr)->left == traversalptr)//RIGHT ROTATION
 	    traversalptr = rightRotation(traversalptr->parent);
