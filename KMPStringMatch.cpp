@@ -36,7 +36,9 @@ int getPatternIndex(char *text,char *pattern){
     cout<<"PATTERN IS LARGER THAN TEXT!!"<<endl;
     throw ("PATTERN OVERSIZED THAN TEXT ITSELF");
   } 
+
   auto table = getSkipTable(pattern,m);
+
   for(int i = 0,j = 0; i < n;){
     if(text[i] == pattern[j])
       i++,j++;
@@ -46,6 +48,7 @@ int getPatternIndex(char *text,char *pattern){
       else
         i++;
     }
+
     if(j == m)//FOUND AND MATCHED ALL CHARACTERS IN PATTERN SO FOUND PATTERN
       return (i-m);
   }
