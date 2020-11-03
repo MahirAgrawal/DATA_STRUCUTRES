@@ -1,3 +1,26 @@
+/**
+ * EDGE LIST IS A LIST TYPE DATA STRUCTURE WHICH STORES ALL EDGES IN GRAPH IN A CONTINUOUS LIST AND NO ORDER IS
+ * MAINTAINED 
+ * 
+ * SPACE COMPLEXITY: O(M+N),WHERE M IS NUMBER OF EDGES AND N IS NUMBER OF VERTICES BECAUSE WE STORE EVERY EDGE IN 
+ * LIST(O(M)) AND ALSO MAINTAIN A HASH TABLE FOR MAPPING ACTUAL VERTEX TO A REFERENCE NUMBER FOR EASY SEARCHING O(N)
+ * 
+ * TIME COMPLEXITY:
+ *1)SEARCHING ALL ADJACENT VERTICES: IT TAKES TO TRAVERSE THE WHOLE EDGE LIST AND DETERMINE THE EDGE HAVING ONE END
+ *  AS THE GIVEN VERTEX AND THE OTHER BECOME ITS NEIGHBOUR BUT CLEARLY HERE WE ARE DOING A LOT OF EXTRA WORK 
+ *  BECAUSE FOR A SINGLE VERTEX WE HAVE TO SCAN THROUGH THE WHOLE LIST OF EDGES SO THIS IS KIND OF BRUTE FORCE AND 
+ *  HENCE NOT EFFICIENT O(M)
+ *
+ *2)FINDING IF EDGE EXIST BETWEEN TWO GIVEN VERTICES: THIS LIKE IN ABOVE IS HAVING A BRUTE FORCE APPROACH AND SO WE
+ *  WE HAVE TO TRAVERSE THE WHOLE EDGE LIST FOR FINDING THE EDGE 
+ *  THEREFORE THE TIME TO DELETE A EDGE IS O(M) AS IT REQUIRES SEARCHING THROUGH THE LIST
+ *
+ * SO OVERALL THE DATASTRUCTURE IS NOT EFFICIENT AS NO ORDERING OR ARRANGEMENT IS THERE AND WE HAVE TO ALWAYS TAKE
+ * BRUTE FORCE APPROACH FOR FINDING QUERY ANSWER
+ *
+ */
+
+
 #include<iostream>
 #include<string>
 #include<vector>
@@ -54,14 +77,15 @@ class Graph{
   void printAdjacentVerticesTo(string& a){//gives adjacent vertices to a
     auto queryVertex = vertex.find(a);//finds the int code for given string vertex
     
-    vector<string> neighbours;//to collect neighbour vertices
-
+    
     if(queryVertex == vertex.end()){//if vertex int code doesn't exist then it means no such vertex is ever added
       cout<<"VERTEX "<<a<<" DOESN'T EXISTS!!"<<endl;
       return;
     }
-     
-    //vertex int code exist so the vertex must be pushed/added
+    
+    vector<string> neighbours;//to collect neighbour vertices
+ 
+    //vertex int code exist so the vertex was pushed/added in past
     int vertexcode = queryVertex -> second;
     for(int i = 0;i < edgeList.size();i++){
       if(edgeList[i].first == vertexcode)
@@ -80,6 +104,26 @@ class Graph{
 
   }
 
+  bool edgeExist(string a,string b){//determines whether the edge between two given vertices exist or not
+ 
+    auto queryVertex1 = vertex.find(a);//finds the int code for given string vertex
+    auto queryVertex2 = vertex.find(b);//finds the int code for given string vertex
+    if(queryVertex1 == vertex.end() || queryVertex2 == vertex.end()){
+      cout<<"TWO GIVEN VERTEX SHOULD BE A PART OF GRAPH"<<endl;
+      return false;
+    }
+
+    auto vertexCode1 = queryVertex1 -> second;
+    auto vertexCode2 = queryVertex2 -> second;
+    for(auto& i:edgeList){
+      if(i.first == vertexCode1 && i.second == vertexCode2)
+        return true;
+      else if(i.first == vertexCode2 && i.second == vertexCode1)
+        return true;
+    }
+    return false;
+  }
+
   ~Graph(){
     edgeList.clear();
     vertex.clear();
@@ -91,18 +135,18 @@ int Graph::vertexindex = 0;
 int main(){
   
   Graph friendnetwork;
-  int n;
   string friend1,friend2;
-  cout<<"ENTER THE NUMBER OF CONNECTIONS YOU WANT TO ADD: ";
-  cin>>n;
 
-  for(int i = 0;i < n;i++){
-    cout<<"ENTER PAIR OF FRIENDS: ";
-    cin>>friend1>>friend2;
+  while(1){
+    cout<<"ENTER PAIR OF FRIENDS(Enter 0 for exit): ";
+    cin>>friend1;
+    if(friend1 == "0")
+      break;
+    cin>>friend2;
     friendnetwork.addEdge(friend1,friend2);
   }
 
-  friend1 = "null";
+
   while(1){
     cout<<"ENTER THE PERSON OF WHICH YOU WANT TO FIND FRIENDS(Enter 0 for exit): ";
     cin>>friend1;
@@ -110,5 +154,15 @@ int main(){
       break;
     friendnetwork.printAdjacentVerticesTo(friend1);
   }
+
+  while(1){
+    cout<<"ENTER THE TWO NAMES OF WHICH YOU WANT TO FIND IF THEY ARE FRIEND(Enter 0 for exit): ";
+    cin>>friend1;
+    if(friend1 == "0")
+      break;
+    cin>>friend2;
+    cout<<"FRIENDSHIP EXIST: "<<friendnetwork.edgeExist(friend1,friend2)<<endl;
+  }
+
   return 0;
 }
