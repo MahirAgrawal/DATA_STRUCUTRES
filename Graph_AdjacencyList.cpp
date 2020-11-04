@@ -224,7 +224,9 @@ class BinaryTree{
   bool search(int key){
     return (search(this -> root,key));
   }
- 
+  
+
+  //for BFS
   void getInorder(Node<X> *_root_,queue<int>& neighbour,bool *visited){
     if(_root_ == NULL)
       return;
@@ -236,9 +238,38 @@ class BinaryTree{
     getInorder(_root_ -> right,neighbour,visited);
   }
 
-  //stores the inorder traversal for a vertex which is not visited
+  //for BFS
   void getInorder(queue<int>& neighbour,bool *visited){
     getInorder(this -> root,neighbour,visited);
+  }
+
+  //for Bipartiteness
+  //color here represents the should be ideal color of neighbours
+  bool getInorder(Node<X> *_root_,int color,queue<int>& neighbour,short int *visited){
+    
+    bool flag = true;
+    
+    if(_root_ == NULL)
+      return true;
+    auto flag2 = getInorder(_root_ -> left,color,neighbour,visited);
+    flag = flag && flag2;
+    //cout<<"status for: "<<_root_ -> first<<" "<<_root_ -> second<<":"<<visited[_root_ -> first];
+    if(visited[_root_ -> first] == -1){
+      neighbour.push(_root_ -> first);
+      visited[_root_ -> first] = color;
+    }
+    
+    else if(visited[_root_ -> first] != color)//neighbour of different color
+      flag = false;
+    //cout<<"::"<<visited[_root_ -> first]<<endl;
+    flag2 = getInorder(_root_ -> right,color,neighbour,visited);
+    flag = flag && flag2;
+    return flag;
+  }
+
+  //for Bipartiteness
+  bool getInorder(int color,queue<int>& neighbour,short int *visited){
+    return getInorder(this -> root,color,neighbour,visited);
   }
   
   void inOrder(){
@@ -336,7 +367,45 @@ class Graph{
         BFS(i,visited);
     delete []visited;
   }
+
+  //application of BREADTH FIRST SEARCH hence using same functions as BFS
+  //but not using the getBFS() method and using copy of it to keep them seperate 
+  //prints all possible connected components along with bool value indicating
+  //whether they are bipartite or not
+  void isBipartite(){
+    //for color we have 2 values and to specify it's not visited we require one
+    //value hence any of the three values could store : -1(not visited) 
+    //visited if not zero (0,1) and 0 1 for two colors
+    //so we cant use boolean array
+    auto visited = (short int *) calloc(neighbourList.size(),sizeof(short int));
+    for(int i = 0;i < neighbourList.size();i++)
+      *(visited+i) = -1;
+    bool flag;
+    for(int i = 0;i < neighbourList.size();i++){
+      if(visited[i] == -1){
+        flag = BFSForBipartite(i,visited);
+        cout<<"IS THERE IS BIPARTITENESS IN CONNECTED COMPONENT HAVING "<<neighbourList[i] -> getMainVertex()<<" : "<<flag<<endl;
+      }
+    }
+    free(visited);
+  }
   
+  bool BFSForBipartite(int vertex,short int *visited){
+    queue<int> q;
+    bool flag = true;
+    q.push(vertex);
+    visited[vertex] = 1;//giving entry vertex '1' color
+    while(!q.empty()){
+      //passing which color to give the neighbours of currently front vertex
+      auto flag2 = (neighbourList[q.front()] -> getInorder(!visited[q.front()],q,visited));
+      flag = flag && flag2;
+      //cout<<neighbourList[q.front()] -> getMainVertex()<<endl;
+      q.pop();
+    }
+    cout<<endl;
+    return flag;
+  }
+ 
   //print the adjacent vertices of given vertex
   void printAdjacentVertices(X a){
     auto v1 = m.find(a);
@@ -374,9 +443,12 @@ int main(){
   friendNetwork.insertEdge("vansh","dev");
   friendNetwork.insertEdge("Mr.X","dev");
   friendNetwork.insertEdge("uv","dev");  
+  friendNetwork.insertEdge("uv","sanika");  
   friendNetwork.insertEdge("manika","sanika");
+  friendNetwork.insertEdge("manika","Mr.X");
   friendNetwork.insertEdge("mihir","vihan");
   friendNetwork.insertEdge("khushi","shrey");
+  friendNetwork.insertEdge("mihir","shrey");
   friendNetwork.insertEdge("malav","mit");
   friendNetwork.insertEdge("manika","tirth");
   friendNetwork.printGraph();
@@ -385,15 +457,17 @@ int main(){
   cout<<"mihir and shrey: "<<friendNetwork.doesEdgeExist("mihir","shrey")<<endl;
   //cout<<"mihir and khusho: "<<friendNetwork.doesEdgeExist("mihir","khusho")<<endl;
   //cout<<"mihir and mit: "<<friendNetwork.doesEdgeExist("mihir","mit")<<endl;
-  //friendNetwork.removeEdge("mihir","jk");
-  //friendNetwork.removeEdge("mihir","dev");
+  friendNetwork.isBipartite();
+  friendNetwork.removeEdge("mihir","shrey");
+  friendNetwork.removeEdge("uv","dev");
   //friendNetwork.removeEdge("mihir","shrey");
   //cout<<"mihir and shrey: "<<friendNetwork.doesEdgeExist("mihir","shrey")<<endl;
   //friendNetwork.printGraph();
+  //friendNetwork.getBFS();
+  //cout<<endl;
+  //friendNetwork.removeEdge("mihir","khushi");
   friendNetwork.getBFS();
-  cout<<endl;
-  friendNetwork.removeEdge("mihir","khushi");
-  friendNetwork.getBFS();
+  friendNetwork.isBipartite();
   return 0;
 }
 
