@@ -2,6 +2,8 @@
 #include<vector>
 #include<map>
 #include<string>
+#include<queue>
+#define queue std::queue
 #define string std::string
 #define map std::map
 #define cin std::cin
@@ -204,7 +206,7 @@ class BinaryTree{
     cout<<_root_ -> first<<" "<<_root_ -> second<<endl;
     inOrder(_root_ -> right);
   }
-
+ 
   public:
   //public methods to use above functions without knowing root of tree
   BinaryTree(){
@@ -222,7 +224,23 @@ class BinaryTree{
   bool search(int key){
     return (search(this -> root,key));
   }
+ 
+  void getInorder(Node<X> *_root_,queue<int>& neighbour,bool *visited){
+    if(_root_ == NULL)
+      return;
+    getInorder(_root_ -> left,neighbour,visited);
+    if(!visited[_root_ -> first]){
+      neighbour.push(_root_ -> first);
+      visited[_root_ -> first] = true;
+    }
+    getInorder(_root_ -> right,neighbour,visited);
+  }
 
+  //stores the inorder traversal for a vertex which is not visited
+  void getInorder(queue<int>& neighbour,bool *visited){
+    getInorder(this -> root,neighbour,visited);
+  }
+  
   void inOrder(){
     this -> inOrder(this -> root);
     cout<<endl;
@@ -294,6 +312,30 @@ class Graph{
       i -> inOrder();
     }  
   }
+
+  //gives the breadthfirst search
+  void BFS(int vertex,bool *visited){
+    queue<int> q;
+    q.push(vertex);
+    visited[vertex] = true;
+    cout<<"BREADTH FIRST TRAVERSAL: ";
+    while(!q.empty()){
+      cout<<neighbourList[q.front()] -> getMainVertex()<<" ";
+      neighbourList[q.front()] -> getInorder(q,visited);
+      q.pop();
+    }
+    cout<<endl;
+  }
+
+  void getBFS(){
+    auto visited = new bool[neighbourList.size()];
+    for(int i = 0;i < neighbourList.size();i++)
+      *(visited+i) = 0;
+    for(int i = 0;i < neighbourList.size();i++)
+      if(!visited[i])
+        BFS(i,visited);
+    delete []visited;
+  }
   
   //print the adjacent vertices of given vertex
   void printAdjacentVertices(X a){
@@ -330,42 +372,28 @@ int main(){
   
   friendNetwork.insertEdge("mihir","khushi");
   friendNetwork.insertEdge("vansh","dev");
-  friendNetwork.insertEdge("vansh","khushi");
-  friendNetwork.insertEdge("dev","vihan");
-  friendNetwork.insertEdge("mihir","shrey");
+  friendNetwork.insertEdge("Mr.X","dev");
+  friendNetwork.insertEdge("uv","dev");  
+  friendNetwork.insertEdge("manika","sanika");
+  friendNetwork.insertEdge("mihir","vihan");
+  friendNetwork.insertEdge("khushi","shrey");
   friendNetwork.insertEdge("malav","mit");
-  friendNetwork.insertEdge("mihir","tirth");
+  friendNetwork.insertEdge("manika","tirth");
   friendNetwork.printGraph();
-  friendNetwork.printAdjacentVertices("khusho");
+  //friendNetwork.printAdjacentVertices("khusho");
   friendNetwork.printAdjacentVertices("khushi");
   cout<<"mihir and shrey: "<<friendNetwork.doesEdgeExist("mihir","shrey")<<endl;
-  cout<<"mihir and khusho: "<<friendNetwork.doesEdgeExist("mihir","khusho")<<endl;
-  cout<<"mihir and mit: "<<friendNetwork.doesEdgeExist("mihir","mit")<<endl;
+  //cout<<"mihir and khusho: "<<friendNetwork.doesEdgeExist("mihir","khusho")<<endl;
+  //cout<<"mihir and mit: "<<friendNetwork.doesEdgeExist("mihir","mit")<<endl;
   //friendNetwork.removeEdge("mihir","jk");
   //friendNetwork.removeEdge("mihir","dev");
-  friendNetwork.removeEdge("mihir","shrey");
-  cout<<"mihir and shrey: "<<friendNetwork.doesEdgeExist("mihir","shrey")<<endl;
-  //friendNetwork.removeEdge("malav","mit");
-  friendNetwork.printGraph();
-  /*BinaryTree<float> tree;
-  tree.insert(23,10.93);
-  tree.insert(24,101.93); 
-  tree.insert(25,1.93);  
-  tree.insert(45,1.3);  
-  tree.insert(40,.44);
-  tree.insert(43,.4);
-  tree.insert(10,33);
-  tree.insert(5,23);
-  tree.insert(15,1.32); 
-  tree.insert(19,3.2);
-  tree.inOrder();
-  tree.erase(5);
-  tree.inOrder();
-  tree.erase(43);
-  tree.erase(45);
-  tree.inOrder();
-  tree.erase(23);
-  tree.inOrder();*/
+  //friendNetwork.removeEdge("mihir","shrey");
+  //cout<<"mihir and shrey: "<<friendNetwork.doesEdgeExist("mihir","shrey")<<endl;
+  //friendNetwork.printGraph();
+  friendNetwork.getBFS();
+  cout<<endl;
+  friendNetwork.removeEdge("mihir","khushi");
+  friendNetwork.getBFS();
   return 0;
 }
 
