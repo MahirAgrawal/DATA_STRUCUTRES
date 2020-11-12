@@ -87,7 +87,10 @@ int LCS(char *a,char *b){
 }
 
 int main(){
-  cin>>one>>two;
+  cout<<"ENTER THE FIRST STRING: ";
+  cin>>one;
+  cout<<"ENTER THE SECOND STRING: ";
+  cin>>two;
   size1 = strlen(one);
   size2 = strlen(two);
   cout<<"size: "<<size1<<" "<<size2<<endl;
