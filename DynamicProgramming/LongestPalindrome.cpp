@@ -6,6 +6,9 @@
 #define vector std::vector
 #define cin std::cin
 #define endl '\n'
+//BRUTE FORCE APPROACH PRODUCES N^2 SUBSTRINGS AND THEN CHECK FOR ISPALINDROME IN O(N) FOR EACH OF THEM HENCE THE
+//BRUTE FORCE APPROACH TAKES O(N^3) TIME AND O(1) SPACE
+
 //REFERENCE LEETCODE EDITORIAL OF LONGEST PALINDROME PROBLEM ALSO READ ALL APPROACHES TO SOLVE THIS PROBLEM INCLUDING O(n)
 
 /**gives the longest palindrome for the given string
@@ -15,6 +18,9 @@
 *
 *ALSO INCASE str[first] != str[last] check for ISPALINDROME(str[first],str[last-1]) and ISPALINDROME(str[first+1],str[last])
 *E.G _a_bba_d_ (a != d) so check ISPALINDROME(abba) and ISPALINDROME(bbad)
+* 
+*TIME COMPLEXITY IN DYNAMIC APPROACH:
+* AS IT MAKES A LOOKUP TABLE OF O(N^2) AND FILL IT(HALF FILLED ONLY) SO IT TAKES O(N^2) TIME AND SAME SPACE 
 *
 */
 

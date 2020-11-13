@@ -17,8 +17,13 @@
  * but as recursive code itself is easy but we know from factorial or fibonacci method that repetitive calls are 
  * made and hence the time complexity is O(2^n) exponential and hence we use a matrix,array or hash table for
  * storing the calclated subproblems so that any repetitive call to same subproblem would be completed in O(1) time
+ *
+ * TIME AND SPACE COMPLEXITY: FOR BRUTE FORCE APPROACH WE CAN FORM 2^N SEQUENCES FOR BOTH STRINGS AND THEN TRY TO
+ * FIND THE LONGEST COMMON SEQUENCE
+ *
+ * WITH DYNAMIC APPROACH WE BUILD LOOKUP TABLE OF SIZE M*N WHERE M AND N ARE SIZE OF STRINGS SO FILLING REQUIRES
+ * O(M*N) TIME THEREFORE IT TAKES TIME AND SPACE OF O(M*N)
  */
-
 
 /*TOP DOWN APPROACH WITH MEMOIZATION BUT AS CODE WORKS RECURSIVELY THERE CAN BE A STACK OVERFLOW IN THE PROBLEMS WITH LARGE STRINGS LIKE A DOCUMENT OR LARGE FILE
  *SO THE RECURSIVE APPROACH IS EASY TO BUILD AND THINK BUT ITERATIVE CODE IS MUST FOR LARGE PROBLEMS

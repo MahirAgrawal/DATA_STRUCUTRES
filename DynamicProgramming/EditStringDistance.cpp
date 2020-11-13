@@ -8,6 +8,11 @@
 #define cin std::cin
 #define endl '\n'
 
+/**
+ * THE DYNAMIC APPROACH BUILDS A TABLE OF SIZE M*N WHERE M,N IS LENGTH OF TWO GIVEN STRINGS
+ * AND SO TIME AND SPACE COMPLEXITY IS O(N*M) WHICH IS FAR BETTER THAN EXPONENTIAL RUN TIME
+ */
+
 vector<vector<int>> lookupTable;//to store calculated subproblems
 //moves to convert a into b
 int editDistance(string& a,string& b,int i,int j){
